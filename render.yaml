@@ -1,0 +1,45 @@
+services:
+  # =================================================================
+  # 1. Backend Service: Python FastAPI (Render Free Web Service)
+  # =================================================================
+  - type: web
+    name: prepai-backend
+    runtime: python
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    autoDeploy: true
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false # Set securely in Render dashboard
+      - key: LLM_MODEL
+        value: openai/gpt-oss-120b
+      - key: LLM_FALLBACK_MODEL
+        value: llama-3.3-70b-versatile
+      - key: WHISPER_MODEL
+        value: whisper-large-v3-turbo
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+  # =================================================================
+  # 2. Frontend Service: React + Vite (Render Free Static Site)
+  # =================================================================
+  - type: web
+    name: prepai-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    autoDeploy: true
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: prepai-backend
+          property: host
