@@ -30,16 +30,15 @@ services:
     name: prepai-frontend
     runtime: static
     rootDir: frontend
-    buildCommand: npm install && npm run build
-    staticPublishPath: ./dist
+    buildCommand: npm install --include=dev && npm run build
+    staticPublishPath: dist
     autoDeploy: true
     routes:
       - type: rewrite
         source: /*
         destination: /index.html
     envVars:
+      - key: NODE_VERSION
+        value: 20
       - key: VITE_API_BASE_URL
-        fromService:
-          type: web
-          name: prepai-backend
-          property: host
+        value: https://prepai-backend.onrender.com
