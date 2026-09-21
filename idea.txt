@@ -1,0 +1,312 @@
+Personal AI Pre-Placement Preparation Assistant
+
+1. Project Idea
+
+I want to build a personal AI-powered pre-placement preparation assistant to help me prepare for Group Discussions (GD), HR interviews, and resume-based interviews.
+
+The main problem I want to solve is that I sometimes struggle with speaking confidently in English, organizing my thoughts, and answering interview questions naturally.
+
+Instead of depending on a friend or placement trainer for practice, I want to create my own AI assistant that can act as a GD trainer, interviewer, and communication coach.
+
+The system will use an LLM API through the backend to generate questions, analyze my answers, and provide personalized feedback.
+
+---
+
+2. Main Idea
+
+The application will have three major preparation modes:
+
+1. GD Practice
+2. HR Interview Practice
+3. Resume-Based Interview Practice
+
+I will answer questions by speaking through my microphone. The application will convert my speech into text and use the LLM to analyze my response.
+
+The overall process will be:
+
+AI generates question → I speak → Speech-to-Text → AI analyzes → Feedback → I improve → Try again
+
+---
+
+3. GD Practice
+
+The application will generate trending and relevant GD topics using an LLM.
+
+For example:
+
+«"Will Artificial Intelligence reduce job opportunities for graduates?"»
+
+For each topic, the AI can provide:
+
+- Topic explanation
+- Important points
+- Arguments for and against
+- Useful vocabulary
+- Possible opening points
+- Possible conclusion
+- Related questions
+
+I will first understand the topic and then speak about it without simply reading the generated answer.
+
+The application will record my response and analyze it.
+
+---
+
+4. Speech Analysis
+
+This will be one of the main features of the project.
+
+I will press Start Recording, speak my answer, and then submit it for analysis.
+
+The system will use Speech-to-Text and an LLM to analyze:
+
+- English fluency
+- Grammar
+- Vocabulary
+- Relevance
+- Answer structure
+- Repeated words
+- Filler words such as "um", "actually", "like", etc.
+- Speaking duration
+- Overall clarity
+
+For example:
+
+GD Performance
+
+Fluency:       76/100
+Grammar:       72/100
+Vocabulary:    81/100
+Relevance:     86/100
+Structure:     74/100
+
+Filler Words:  8
+Duration:      1 min 42 sec
+
+The AI will also explain what I did wrong and how I can improve it.
+
+---
+
+5. Resume-Based Interview
+
+I will upload my own resume to the application.
+
+The system will extract information such as:
+
+- Education
+- Skills
+- Projects
+- Internships
+- Certifications
+- Achievements
+- Experience
+
+The LLM will then generate interview questions specifically from my resume.
+
+For example, if my resume says:
+
+«"Developed a machine learning project using Python and Scikit-learn."»
+
+The AI can ask:
+
+- Explain your project.
+- Why did you choose this technology?
+- What challenges did you face?
+- What was your contribution?
+- How did you test the model?
+- What would you improve in the project?
+- What did you learn from the project?
+
+This will help me prepare for the questions an interviewer might ask after looking at my resume.
+
+---
+
+6. HR Interview Simulator
+
+The application will also act as a virtual HR interviewer.
+
+It can ask questions such as:
+
+- Tell me about yourself.
+- Why should we hire you?
+- What are your strengths?
+- What is your weakness?
+- Why do you want to join our company?
+- Where do you see yourself in five years?
+- Tell me about a challenge you faced.
+- Tell me about a time you worked in a team.
+
+Instead of typing the answer, I will speak naturally, just like in a real interview.
+
+The AI will analyze my response and provide feedback.
+
+For behavioral questions, the application can also check whether my answer follows a structure such as:
+
+Situation → Task → Action → Result
+
+---
+
+7. Personal Improvement Tracking
+
+Since this application is being created only for myself, I don't need a database or a complete multi-user system.
+
+The application can keep my practice results locally or simply generate a report after each session.
+
+For example:
+
+Practice Session #1
+Fluency: 62
+Grammar: 68
+Vocabulary: 70
+
+Practice Session #5
+Fluency: 78
+Grammar: 81
+Vocabulary: 84
+
+This will allow me to compare my performance between practice sessions.
+
+The AI can also identify my common weaknesses, such as:
+
+- Using too many filler words
+- Repeating the same vocabulary
+- Poor sentence structure
+- Long pauses
+- Weak introduction
+- Giving answers without examples
+- Lack of confidence in speaking
+
+---
+
+8. Technology Stack
+
+Frontend
+
+- React / Next.js
+- Tailwind CSS
+
+Backend
+
+- Python + FastAPI
+
+AI
+
+- Groq API / LLM
+
+The API key will remain securely on the backend and will not be exposed in the frontend.
+
+Speech-to-Text
+
+- Whisper or another speech recognition model/API
+
+Resume Processing
+
+- PDF text extraction
+- LLM for analyzing the resume and generating questions
+
+Storage
+
+No database is required.
+
+The resume and temporary recordings can be processed locally or stored temporarily depending on the implementation.
+
+---
+
+9. System Architecture
+
+                 MY PERSONAL APP
+                       │
+                       ▼
+              ┌─────────────────┐
+              │    Frontend     │
+              │ React / Next.js │
+              └────────┬────────┘
+                       │
+                       ▼
+              ┌─────────────────┐
+              │    FastAPI      │
+              │     Backend     │
+              └────────┬────────┘
+                       │
+             ┌─────────┼──────────┐
+             ▼         ▼          ▼
+          Groq/LLM   Speech-to-Text   Resume Parser
+             │         │          │
+             └─────────┼──────────┘
+                       ▼
+                 AI Analysis
+                       │
+                       ▼
+                Feedback Report
+
+---
+
+10. Example Complete Session
+
+Suppose I select:
+
+"GD Practice"
+
+The application generates:
+
+«Topic: Is AI a threat to employment?»
+
+I get a few minutes to prepare.
+
+Then:
+
+3... 2... 1... Start
+
+I speak for two minutes.
+
+The application:
+
+My Voice
+   ↓
+Speech-to-Text
+   ↓
+Transcript
+   ↓
+LLM Analysis
+   ↓
+Performance Report
+
+The AI might respond:
+
+«Your answer was relevant and you gave good examples. However, you repeated "I think" several times and your conclusion was weak. Try to structure your response into an introduction, two main arguments, an example, and a conclusion.»
+
+Then I can try the same topic again and compare the two attempts.
+
+---
+
+11. Core Learning Cycle
+
+The main concept of the project is:
+
+              PRACTICE
+                  ↓
+                SPEAK
+                  ↓
+              ANALYZE
+                  ↓
+              FEEDBACK
+                  ↓
+               IMPROVE
+                  ↓
+              TRY AGAIN
+                  ↓
+               PRACTICE
+
+This makes the application more than just an AI chatbot. It becomes my personal placement preparation coach.
+
+---
+
+12. Final Objective
+
+The objective is to build a personal AI placement assistant that helps me improve my English communication, GD performance, interview skills, and confidence before placement season.
+
+In simple words:
+
+«"I am building an AI interviewer and communication coach for myself that can generate GD topics, conduct HR and resume-based interviews, analyze how I speak, and tell me exactly how I can improve."»
+
+Because it is designed only for my personal use, the project will focus on the AI, speech analysis, resume analysis, and interview simulation, rather than authentication, multiple users, or database management.
