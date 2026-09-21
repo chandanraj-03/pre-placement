@@ -98,6 +98,7 @@ export default function App() {
         onTabChange={handleTabChange}
         configStatus={configStatus}
         onResetStorage={handleManualStorageReset}
+        onRefreshConfig={fetchInitialData}
       />
 
       {/* Main Content Area */}

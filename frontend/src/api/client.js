@@ -1,10 +1,24 @@
-const rawBase = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
-export const API_BASE = (rawBase.startsWith("http://") || rawBase.startsWith("https://"))
-  ? rawBase
-  : `https://${rawBase}`;
+export function getApiBaseUrl() {
+  const custom = typeof window !== "undefined" ? localStorage.getItem("prepai_custom_backend_url") : null;
+  const raw = custom || import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+  const clean = raw.trim().replace(/\/$/, "");
+  return (clean.startsWith("http://") || clean.startsWith("https://"))
+    ? clean
+    : `https://${clean}`;
+}
+
+export function setCustomBackendUrl(url) {
+  if (url && url.trim()) {
+    localStorage.setItem("prepai_custom_backend_url", url.trim().replace(/\/$/, ""));
+  } else {
+    localStorage.removeItem("prepai_custom_backend_url");
+  }
+}
+
+export const API_BASE = getApiBaseUrl();
 
 async function request(endpoint, options = {}) {
-  const url = `${API_BASE}${endpoint}`;
+  const url = `${getApiBaseUrl()}${endpoint}`;
   const response = await fetch(url, options);
   if (!response.ok) {
     let errorDetail = "Server error occurred";
@@ -23,6 +37,14 @@ export const api = {
   // Config & Status
   async getConfigStatus() {
     return request("/api/history/config-status");
+  },
+
+  async testBackendUrl(testUrl) {
+    const clean = (testUrl || "").trim().replace(/\/$/, "");
+    const base = (clean.startsWith("http://") || clean.startsWith("https://")) ? clean : `https://${clean}`;
+    const res = await fetch(`${base}/api/history/config-status`, { signal: AbortSignal.timeout(10000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    return res.json();
   },
 
   // Direct STT Transcription
