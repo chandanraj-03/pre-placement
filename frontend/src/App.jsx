@@ -5,7 +5,7 @@ import GDPractice from "./pages/GDPractice";
 import HRInterview from "./pages/HRInterview";
 import ResumeInterview from "./pages/ResumeInterview";
 import Analytics from "./pages/Analytics";
-import { api } from "./api/client";
+import { api, API_BASE } from "./api/client";
 import { Heart } from "lucide-react";
 
 export default function App() {
@@ -52,7 +52,7 @@ export default function App() {
     // Trigger cleanup immediately when the page is refreshing or unloading
     const handleBeforeUnload = () => {
       try {
-        fetch("http://127.0.0.1:8000/api/history/reset-all", {
+        fetch(`${API_BASE}/api/history/reset-all`, {
           method: "POST",
           keepalive: true,
         });
