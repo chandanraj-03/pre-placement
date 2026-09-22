@@ -116,7 +116,7 @@ async def delete_note(
     if password != DELETE_PASSWORD:
         raise HTTPException(
             status_code=403,
-            detail="Incorrect deletion password. Please enter 'chandan@123' to confirm deletion."
+            detail="Incorrect deletion password. Please enter the correct security password."
         )
 
     deleted = note_store.delete_note(note_id)

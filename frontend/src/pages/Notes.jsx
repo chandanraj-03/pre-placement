@@ -297,7 +297,7 @@ export default function Notes() {
     }
 
     if (deletePassword !== REQUIRED_DELETE_PASSWORD) {
-      setDeleteError(`Incorrect password. The required password is "${REQUIRED_DELETE_PASSWORD}".`);
+      setDeleteError("Incorrect security password. Please enter the correct password.");
       return;
     }
 
@@ -904,7 +904,7 @@ export default function Notes() {
                       {/* Delete with Password Protection */}
                       <button
                         onClick={() => openDeleteModal(note)}
-                        title="Delete note (requires security password: chandan@123)"
+                        title="Delete note (security password required)"
                         style={{
                           background: "none",
                           border: "none",
@@ -1570,7 +1570,7 @@ export default function Notes() {
                       setDeletePassword(e.target.value);
                       setDeleteError("");
                     }}
-                    placeholder={`Enter "${REQUIRED_DELETE_PASSWORD}" to confirm`}
+                    placeholder="Enter security password to confirm"
                     className="input-field"
                     style={{
                       width: "100%",
@@ -1600,9 +1600,7 @@ export default function Notes() {
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "6px", fontSize: "0.78rem", color: "var(--text-muted)" }}>
                   <Lock size={12} />
-                  <span>
-                    Default security password: <strong style={{ color: "var(--accent-cyan)" }}>{REQUIRED_DELETE_PASSWORD}</strong>
-                  </span>
+                  <span>Security protection enabled to prevent accidental deletion</span>
                 </div>
               </div>
 
