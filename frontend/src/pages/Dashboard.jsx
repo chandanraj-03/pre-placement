@@ -66,7 +66,7 @@ export default function Dashboard({ onNavigate, analytics, configStatus }) {
             <button
               onClick={() => onNavigate("hr")}
               className="btn btn-secondary"
-              style={{ padding: "12px 22px", fontSize: "0.95rem", flex: "1 1 170px" }}
+              style={{ padding: "12px 22px", fontSize: "0.95rem", flex: "1 1 150px" }}
             >
               <Briefcase size={18} />
               <span>HR Simulator</span>
@@ -75,10 +75,19 @@ export default function Dashboard({ onNavigate, analytics, configStatus }) {
             <button
               onClick={() => onNavigate("resume")}
               className="btn btn-secondary"
-              style={{ padding: "12px 22px", fontSize: "0.95rem", flex: "1 1 170px" }}
+              style={{ padding: "12px 22px", fontSize: "0.95rem", flex: "1 1 160px" }}
             >
               <FileCode2 size={18} />
               <span>Resume Interview</span>
+            </button>
+
+            <button
+              onClick={() => onNavigate("notes")}
+              className="btn btn-secondary"
+              style={{ padding: "12px 22px", fontSize: "0.95rem", flex: "1 1 160px" }}
+            >
+              <BookOpen size={18} />
+              <span>Study Notes & PDFs</span>
             </button>
           </div>
         </div>

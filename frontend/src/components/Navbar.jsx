@@ -251,6 +251,36 @@ export default function Navbar({
                 Placement Coach
               </div>
             </div>
+
+            <span
+              className="mobile-only"
+              style={{
+                fontSize: "0.72rem",
+                padding: "3px 8px",
+                borderRadius: "var(--radius-full)",
+                background: "rgba(99, 102, 241, 0.18)",
+                border: "1px solid rgba(99, 102, 241, 0.35)",
+                color: "#c7d2fe",
+                fontWeight: "600",
+                marginLeft: "6px",
+                whiteSpace: "nowrap",
+                maxWidth: "110px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {activeTab === "dashboard"
+                ? "Home"
+                : activeTab === "gd"
+                ? "GD Prep"
+                : activeTab === "hr"
+                ? "HR Round"
+                : activeTab === "resume"
+                ? "Resume"
+                : activeTab === "notes"
+                ? "Notes"
+                : "Stats"}
+            </span>
           </div>
 
           {/* Desktop Nav Links */}
@@ -412,99 +442,194 @@ export default function Navbar({
             </button>
           </div>
         </div>
+      </header>
 
-        {/* Mobile Slide-down / Full Overlay Drawer */}
-        {mobileMenuOpen && (
-          <div
-            style={{
-              position: "fixed",
-              top: "64px",
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 49,
-              background: "rgba(10, 13, 23, 0.98)",
-              backdropFilter: "blur(24px)",
-              WebkitBackdropFilter: "blur(24px)",
-              padding: "20px 16px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-              overflowY: "auto",
-              borderTop: "1px solid var(--border-subtle)",
+      {/* Mobile Slide-down / Full Overlay Drawer - Outside header to avoid stacking context entrapment */}
+      {mobileMenuOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: "60px",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 999,
+            background: "rgba(10, 13, 23, 0.98)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            padding: "20px 16px 90px 16px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            overflowY: "auto",
+            borderTop: "1px solid var(--border-subtle)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
+            <div style={{ fontSize: "0.76rem", fontWeight: "700", textTransform: "uppercase", color: "var(--text-muted)", letterSpacing: "0.08em" }}>
+              Practice Rounds & Study Tools
+            </div>
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              style={{
+                background: "none",
+                border: "none",
+                color: "var(--text-muted)",
+                cursor: "pointer",
+                padding: "4px",
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+                fontSize: "0.8rem",
+              }}
+            >
+              <X size={16} />
+              <span>Close</span>
+            </button>
+          </div>
+
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  onTabChange(item.id);
+                  setMobileMenuOpen(false);
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "13px 16px",
+                  borderRadius: "var(--radius-md)",
+                  fontSize: "0.98rem",
+                  fontWeight: isActive ? "700" : "500",
+                  color: isActive ? "#ffffff" : "var(--text-primary)",
+                  background: isActive ? "var(--gradient-primary)" : "rgba(255, 255, 255, 0.04)",
+                  border: isActive ? "none" : "1px solid var(--border-subtle)",
+                  boxShadow: isActive ? "0 4px 14px rgba(99, 102, 241, 0.35)" : "none",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  width: "100%",
+                }}
+              >
+                <Icon size={19} color={isActive ? "#ffffff" : "var(--accent-primary)"} />
+                <span style={{ flex: 1 }}>{item.label}</span>
+                {item.id === "notes" && (
+                  <span className="badge badge-indigo" style={{ fontSize: "0.68rem" }}>
+                    PDFs
+                  </span>
+                )}
+              </button>
+            );
+          })}
+
+          <div style={{ height: "1px", background: "var(--border-subtle)", margin: "8px 0" }} />
+
+          <div style={{ fontSize: "0.76rem", fontWeight: "700", textTransform: "uppercase", color: "var(--text-muted)", letterSpacing: "0.08em" }}>
+            Controls & Configuration
+          </div>
+
+          <button
+            onClick={() => {
+              setShowModal(true);
+              setMobileMenuOpen(false);
             }}
+            className="btn btn-secondary"
+            style={{ width: "100%", justifyContent: "flex-start", padding: "12px 16px", gap: "10px", fontSize: "0.92rem" }}
           >
-            <div style={{ fontSize: "0.75rem", fontWeight: "700", textTransform: "uppercase", color: "var(--text-muted)", letterSpacing: "0.08em" }}>
-              Practice Rounds
-            </div>
+            <Settings size={18} color="var(--accent-cyan)" />
+            <span>Groq Key & Backend URL</span>
+          </button>
 
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    onTabChange(item.id);
-                    setMobileMenuOpen(false);
-                  }}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "12px",
-                    padding: "13px 16px",
-                    borderRadius: "var(--radius-md)",
-                    fontSize: "0.98rem",
-                    fontWeight: isActive ? "700" : "500",
-                    color: isActive ? "#ffffff" : "var(--text-primary)",
-                    background: isActive ? "var(--gradient-primary)" : "rgba(255, 255, 255, 0.04)",
-                    border: isActive ? "none" : "1px solid var(--border-subtle)",
-                    boxShadow: isActive ? "0 4px 14px rgba(99, 102, 241, 0.35)" : "none",
-                    cursor: "pointer",
-                    textAlign: "left",
-                    width: "100%",
-                  }}
-                >
-                  <Icon size={19} color={isActive ? "#ffffff" : "var(--accent-primary)"} />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-
-            <div style={{ height: "1px", background: "var(--border-subtle)", margin: "8px 0" }} />
-
-            <div style={{ fontSize: "0.75rem", fontWeight: "700", textTransform: "uppercase", color: "var(--text-muted)", letterSpacing: "0.08em" }}>
-              Controls & Settings
-            </div>
-
+          {onResetStorage && (
             <button
               onClick={() => {
-                setShowModal(true);
+                onResetStorage();
                 setMobileMenuOpen(false);
               }}
               className="btn btn-secondary"
-              style={{ width: "100%", justifyContent: "flex-start", padding: "12px 16px", gap: "10px" }}
+              style={{ width: "100%", justifyContent: "flex-start", padding: "12px 16px", gap: "10px", color: "var(--accent-rose)", fontSize: "0.92rem" }}
             >
-              <Settings size={18} color="var(--accent-cyan)" />
-              <span>Groq Key & Backend URL</span>
+              <Trash2 size={18} />
+              <span>Clear Stored Practice History</span>
             </button>
+          )}
+        </div>
+      )}
 
-            {onResetStorage && (
-              <button
-                onClick={() => {
-                  onResetStorage();
-                  setMobileMenuOpen(false);
+      {/* Mobile Bottom Navigation Bar - Thumb-friendly 1-tap switching on mobile */}
+      <nav className="mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeTab === item.id;
+          const shortLabel =
+            item.id === "dashboard"
+              ? "Home"
+              : item.id === "gd"
+              ? "GD"
+              : item.id === "hr"
+              ? "HR"
+              : item.id === "resume"
+              ? "Resume"
+              : item.id === "notes"
+              ? "Notes"
+              : "Stats";
+
+          return (
+            <button
+              key={item.id}
+              onClick={() => onTabChange(item.id)}
+              style={{
+                background: "none",
+                border: "none",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "2px",
+                padding: "4px 2px",
+                flex: 1,
+                cursor: "pointer",
+                color: isActive ? "#ffffff" : "var(--text-muted)",
+                transition: "all 0.15s ease",
+                minWidth: 0,
+                outline: "none",
+              }}
+            >
+              <div
+                style={{
+                  padding: "4px 10px",
+                  borderRadius: "var(--radius-full)",
+                  background: isActive ? "var(--gradient-primary)" : "transparent",
+                  boxShadow: isActive ? "0 2px 10px rgba(99, 102, 241, 0.4)" : "none",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.2s ease",
                 }}
-                className="btn btn-secondary"
-                style={{ width: "100%", justifyContent: "flex-start", padding: "12px 16px", gap: "10px", color: "var(--accent-rose)" }}
               >
-                <Trash2 size={18} />
-                <span>Clear Stored Practice History</span>
-              </button>
-            )}
-          </div>
-        )}
-      </header>
+                <Icon size={18} color={isActive ? "#ffffff" : "var(--text-muted)"} />
+              </div>
+              <span
+                style={{
+                  fontSize: "0.68rem",
+                  fontWeight: isActive ? "700" : "500",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  maxWidth: "100%",
+                  color: isActive ? "#c7d2fe" : "var(--text-muted)",
+                }}
+              >
+                {shortLabel}
+              </span>
+            </button>
+          );
+        })}
+      </nav>
 
       {/* Backend & API Settings Modal */}
       {showModal && (

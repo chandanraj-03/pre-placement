@@ -25,6 +25,9 @@ import {
   List,
   Lock,
   ShieldAlert,
+  ArrowLeft,
+  ChevronRight,
+  FileSpreadsheet,
 } from "lucide-react";
 import { api } from "../api/client";
 
@@ -52,8 +55,8 @@ export default function Notes() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Mobile view toggle ("list" | "preview")
-  const [mobileView, setMobileView] = useState("list");
+  // Mobile view mode: "list" | "preview" | "both"
+  const [mobileTab, setMobileTab] = useState("list");
 
   // Modals state
   const [showAddModal, setShowAddModal] = useState(false);
@@ -86,7 +89,7 @@ export default function Notes() {
   });
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // Delete Note Password Confirmation state
+  // Delete Password Confirmation state
   const [deletePassword, setDeletePassword] = useState("");
   const [showDeletePassword, setShowDeletePassword] = useState(false);
   const [deleteError, setDeleteError] = useState("");
@@ -102,7 +105,6 @@ export default function Notes() {
       const res = await api.getNotes(selectedCategory, searchQuery, sortBy);
       if (res && res.notes) {
         setNotes(res.notes);
-        // Automatically select the first note if none is selected
         if (!selectedNoteId && res.notes.length > 0) {
           setSelectedNoteId(res.notes[0].id);
         } else if (selectedNoteId && !res.notes.some((n) => n.id === selectedNoteId)) {
@@ -164,7 +166,6 @@ export default function Notes() {
           previewUrl: res.preview_url,
         });
 
-        // Auto-fill title and file name if user hasn't typed their own
         setAddForm((prev) => ({
           ...prev,
           title: prev.title || res.suggested_title || `Placement Notes (${res.file_id.slice(0, 6)})`,
@@ -222,7 +223,7 @@ export default function Notes() {
         await fetchCategories();
         if (res.note?.id) {
           setSelectedNoteId(res.note.id);
-          setMobileView("preview");
+          setMobileTab("preview");
         }
       }
     } catch (err) {
@@ -277,7 +278,7 @@ export default function Notes() {
     }
   };
 
-  // Open Delete Confirmation Modal (resets password & errors)
+  // Open Delete Confirmation Modal
   const openDeleteModal = (note) => {
     setActiveNoteForAction(note);
     setDeletePassword("");
@@ -286,7 +287,7 @@ export default function Notes() {
     setShowDeleteModal(true);
   };
 
-  // Handle Delete with Required Password
+  // Handle Delete with Password Confirmation
   const handleDeleteConfirm = async (e) => {
     if (e) e.preventDefault();
     if (!activeNoteForAction) return;
@@ -343,37 +344,36 @@ export default function Notes() {
       <div
         className="glass-panel"
         style={{
-          padding: "clamp(18px, 4vw, 26px)",
+          padding: "clamp(16px, 3.5vw, 24px)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           flexWrap: "wrap",
-          gap: "16px",
+          gap: "14px",
           background: "linear-gradient(135deg, rgba(20, 26, 46, 0.85) 0%, rgba(30, 41, 69, 0.7) 100%)",
         }}
       >
         <div style={{ maxWidth: "620px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px", flexWrap: "wrap" }}>
             <span className="badge badge-indigo">
-              <BookOpen size={14} /> Placement Study Notes
+              <BookOpen size={13} /> Placement Study Notes
             </span>
             <span className="badge badge-cyan">
-              <FileCheck size={14} /> Google Drive PDF Viewer
+              <FileCheck size={13} /> Google Drive PDF Viewer
             </span>
             <span className="badge badge-emerald" title="Stored safely in notes.json">
               Permanent Storage
             </span>
           </div>
-          <h1 style={{ fontSize: "clamp(1.4rem, 4vw, 2rem)", fontWeight: "800", marginBottom: "6px" }}>
+          <h1 style={{ fontSize: "clamp(1.4rem, 4vw, 2rem)", fontWeight: "800", marginBottom: "4px" }}>
             Placement Notes & Cheat Sheets
           </h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.92rem", lineHeight: "1.5" }}>
-            Save and organize your study notes using Google Drive links. View PDFs directly within the app,
-            organize by folders, search concepts, and never lose your revision materials.
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", lineHeight: "1.5" }}>
+            Save notes using Google Drive links, view live PDFs directly in the app, search concepts, and organize by folders.
           </p>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", width: "auto" }}>
           <button
             onClick={() => {
               setIsRefreshing(true);
@@ -382,10 +382,10 @@ export default function Notes() {
             }}
             className="btn btn-secondary"
             title="Refresh Notes list"
-            style={{ padding: "10px 14px" }}
+            style={{ padding: "9px 14px", fontSize: "0.86rem", gap: "6px" }}
           >
-            <RefreshCw size={16} className={isRefreshing ? "spin" : ""} />
-            <span className="desktop-only">Refresh</span>
+            <RefreshCw size={15} className={isRefreshing ? "spin" : ""} />
+            <span>Refresh</span>
           </button>
 
           <button
@@ -404,14 +404,14 @@ export default function Notes() {
             }}
             className="btn btn-primary"
             style={{
-              padding: "10px 20px",
+              padding: "9px 18px",
               gap: "8px",
               fontWeight: "600",
               boxShadow: "0 4px 16px rgba(99, 102, 241, 0.35)",
             }}
           >
             <Plus size={18} />
-            <span>Add Google Drive Note</span>
+            <span>Add Note</span>
           </button>
         </div>
       </div>
@@ -420,10 +420,10 @@ export default function Notes() {
       <div
         className="glass-panel"
         style={{
-          padding: "clamp(12px, 3vw, 18px)",
+          padding: "clamp(12px, 2.5vw, 16px)",
           display: "flex",
           flexDirection: "column",
-          gap: "14px",
+          gap: "12px",
         }}
       >
         <div
@@ -432,17 +432,11 @@ export default function Notes() {
             alignItems: "center",
             justifyContent: "space-between",
             flexWrap: "wrap",
-            gap: "12px",
+            gap: "10px",
           }}
         >
           {/* Search bar */}
-          <div
-            style={{
-              position: "relative",
-              flex: "1 1 280px",
-              maxWidth: "520px",
-            }}
-          >
+          <div style={{ position: "relative", flex: "1 1 240px", maxWidth: "520px" }}>
             <Search
               size={16}
               style={{
@@ -457,7 +451,7 @@ export default function Notes() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by note title, PDF file name, or topic..."
+              placeholder="Search notes by title, PDF name, topic..."
               className="input-field"
               style={{
                 width: "100%",
@@ -487,20 +481,20 @@ export default function Notes() {
           </div>
 
           {/* Sort Dropdown */}
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ fontSize: "0.85rem", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: "4px" }}>
-              <ArrowUpDown size={14} /> Sort:
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+            <span style={{ fontSize: "0.82rem", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: "4px" }}>
+              <ArrowUpDown size={13} /> Sort:
             </span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               className="input-field"
               style={{
-                height: "40px",
-                padding: "0 12px",
+                height: "38px",
+                padding: "0 10px",
                 fontSize: "0.85rem",
                 width: "auto",
-                minWidth: "140px",
+                minWidth: "135px",
               }}
             >
               <option value="newest">Recently Added</option>
@@ -523,7 +517,7 @@ export default function Notes() {
             paddingBottom: "4px",
           }}
         >
-          <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginRight: "4px", whiteSpace: "nowrap" }}>
+          <span style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginRight: "4px", whiteSpace: "nowrap" }}>
             Folders:
           </span>
 
@@ -582,28 +576,29 @@ export default function Notes() {
         </div>
       </div>
 
-      {/* 3. Mobile View Switcher */}
+      {/* 3. Mobile View Switcher Tabs (For screens <= 860px) */}
       <div
         className="mobile-only"
         style={{
           display: "flex",
           borderRadius: "var(--radius-md)",
-          background: "rgba(0, 0, 0, 0.3)",
+          background: "rgba(0, 0, 0, 0.35)",
           padding: "4px",
           border: "1px solid var(--border-subtle)",
+          gap: "4px",
         }}
       >
         <button
-          onClick={() => setMobileView("list")}
+          onClick={() => setMobileTab("list")}
           style={{
             flex: 1,
-            padding: "8px 12px",
+            padding: "9px 12px",
             borderRadius: "var(--radius-sm)",
             border: "none",
-            background: mobileView === "list" ? "var(--accent-primary)" : "transparent",
-            color: mobileView === "list" ? "#fff" : "var(--text-secondary)",
-            fontWeight: mobileView === "list" ? "700" : "500",
-            fontSize: "0.88rem",
+            background: mobileTab === "list" ? "var(--accent-primary)" : "transparent",
+            color: mobileTab === "list" ? "#fff" : "var(--text-secondary)",
+            fontWeight: mobileTab === "list" ? "700" : "500",
+            fontSize: "0.86rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -612,20 +607,20 @@ export default function Notes() {
           }}
         >
           <List size={16} />
-          <span>Notes List ({notes.length})</span>
+          <span>Browse Notes ({notes.length})</span>
         </button>
 
         <button
-          onClick={() => setMobileView("preview")}
+          onClick={() => setMobileTab("preview")}
           style={{
             flex: 1,
-            padding: "8px 12px",
+            padding: "9px 12px",
             borderRadius: "var(--radius-sm)",
             border: "none",
-            background: mobileView === "preview" ? "var(--accent-primary)" : "transparent",
-            color: mobileView === "preview" ? "#fff" : "var(--text-secondary)",
-            fontWeight: mobileView === "preview" ? "700" : "500",
-            fontSize: "0.88rem",
+            background: mobileTab === "preview" ? "var(--accent-primary)" : "transparent",
+            color: mobileTab === "preview" ? "#fff" : "var(--text-secondary)",
+            fontWeight: mobileTab === "preview" ? "700" : "500",
+            fontSize: "0.86rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -634,29 +629,20 @@ export default function Notes() {
           }}
         >
           <Eye size={16} />
-          <span>PDF Preview {activeNote ? `(${activeNote.file_name.slice(0, 12)}...)` : ""}</span>
+          <span>PDF Reader</span>
         </button>
       </div>
 
       {/* 4. Dual Panel Main Workspace */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-          gap: "20px",
-          alignItems: "start",
-        }}
-      >
+      <div className="notes-layout-grid">
         {/* LEFT PANEL: Saved Notes File Manager List */}
         <div
-          className={`notes-list-panel ${mobileView === "preview" ? "mobile-hidden" : ""}`}
+          className={`notes-list-col ${mobileTab === "preview" ? "mobile-hidden" : ""}`}
           style={{
-            display: "flex",
-            flexDirection: "column",
             gap: "12px",
             maxHeight: "850px",
             overflowY: "auto",
-            paddingRight: "4px",
+            paddingRight: "2px",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 4px" }}>
@@ -664,7 +650,7 @@ export default function Notes() {
               Saved PDF Notes ({notes.length})
             </span>
             <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
-              Click a file to view PDF preview
+              Tap any note to read
             </span>
           </div>
 
@@ -702,8 +688,8 @@ export default function Notes() {
               <h3 style={{ fontSize: "1.1rem", fontWeight: "700" }}>No notes found</h3>
               <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", maxWidth: "340px" }}>
                 {searchQuery
-                  ? `No notes matching "${searchQuery}". Try a different search term or category.`
-                  : "Save your first Google Drive PDF link to preview and manage placement study notes."}
+                  ? `No notes matching "${searchQuery}". Try another keyword or folder.`
+                  : "Save your first Google Drive PDF link to preview and organize placement study notes."}
               </p>
               <button
                 onClick={() => setShowAddModal(true)}
@@ -723,7 +709,7 @@ export default function Notes() {
                   key={note.id}
                   onClick={() => {
                     setSelectedNoteId(note.id);
-                    setMobileView("preview");
+                    setMobileTab("preview");
                   }}
                   className={`glass-panel ${isSelected ? "glass-panel-glow" : ""}`}
                   style={{
@@ -762,7 +748,7 @@ export default function Notes() {
                     </div>
 
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "4px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap", marginBottom: "4px" }}>
                         <span
                           className="badge badge-indigo"
                           style={{ fontSize: "0.72rem", padding: "2px 8px" }}
@@ -839,6 +825,8 @@ export default function Notes() {
                       paddingTop: "8px",
                       fontSize: "0.76rem",
                       color: "var(--text-muted)",
+                      flexWrap: "wrap",
+                      gap: "6px",
                     }}
                   >
                     <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
@@ -849,6 +837,19 @@ export default function Notes() {
                       onClick={(e) => e.stopPropagation()}
                       style={{ display: "flex", alignItems: "center", gap: "6px" }}
                     >
+                      {/* View Button */}
+                      <button
+                        onClick={() => {
+                          setSelectedNoteId(note.id);
+                          setMobileTab("preview");
+                        }}
+                        className="btn btn-secondary"
+                        style={{ padding: "4px 10px", fontSize: "0.75rem", gap: "4px", minHeight: "28px" }}
+                      >
+                        <Eye size={13} />
+                        <span>Read PDF</span>
+                      </button>
+
                       {/* Copy Drive Link */}
                       <button
                         onClick={() => handleCopyLink(note)}
@@ -861,7 +862,6 @@ export default function Notes() {
                           padding: "4px",
                           display: "flex",
                           alignItems: "center",
-                          borderRadius: "4px",
                         }}
                       >
                         {copiedNoteId === note.id ? <Check size={14} /> : <Copy size={14} />}
@@ -895,7 +895,6 @@ export default function Notes() {
                           padding: "4px",
                           display: "flex",
                           alignItems: "center",
-                          borderRadius: "4px",
                         }}
                       >
                         <Edit3 size={14} />
@@ -913,7 +912,6 @@ export default function Notes() {
                           padding: "4px",
                           display: "flex",
                           alignItems: "center",
-                          borderRadius: "4px",
                         }}
                       >
                         <Trash2 size={14} />
@@ -928,10 +926,8 @@ export default function Notes() {
 
         {/* RIGHT PANEL: In-App Embedded Google Drive PDF Viewer */}
         <div
-          className={`notes-preview-panel ${mobileView === "list" ? "mobile-hidden" : ""}`}
+          className={`notes-preview-col ${mobileTab === "list" ? "mobile-hidden" : ""}`}
           style={{
-            display: "flex",
-            flexDirection: "column",
             gap: "12px",
             minWidth: 0,
           }}
@@ -957,16 +953,24 @@ export default function Notes() {
                   flexWrap: "wrap",
                   gap: "10px",
                   borderBottom: "1px solid var(--border-subtle)",
-                  paddingBottom: "12px",
+                  paddingBottom: "10px",
                 }}
               >
                 <div style={{ flex: 1, minWidth: "220px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "4px" }}>
+                  {/* Mobile Back button */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+                    <button
+                      onClick={() => setMobileTab("list")}
+                      className="btn btn-secondary mobile-only"
+                      style={{ padding: "4px 10px", fontSize: "0.78rem", gap: "4px", minHeight: "30px" }}
+                    >
+                      <ArrowLeft size={14} />
+                      <span>Back to List</span>
+                    </button>
+
                     <span className="badge badge-indigo">{activeNote.category}</span>
-                    <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                      Saved on {formatDate(activeNote.created_at)}
-                    </span>
                   </div>
+
                   <h3
                     style={{
                       fontSize: "clamp(1.05rem, 3vw, 1.3rem)",
@@ -983,15 +987,31 @@ export default function Notes() {
                 </div>
 
                 {/* Toolbar Buttons */}
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                  {/* Fullscreen Modal Toggle */}
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
+                  {/* Switch Note dropdown on mobile */}
+                  {notes.length > 1 && (
+                    <select
+                      value={activeNote.id}
+                      onChange={(e) => setSelectedNoteId(e.target.value)}
+                      className="input-field mobile-only"
+                      style={{ height: "34px", padding: "0 8px", fontSize: "0.8rem", maxWidth: "160px" }}
+                    >
+                      {notes.map((n) => (
+                        <option key={n.id} value={n.id}>
+                          {n.title.slice(0, 24)}...
+                        </option>
+                      ))}
+                    </select>
+                  )}
+
+                  {/* Fullscreen Toggle */}
                   <button
                     onClick={() => setShowFullscreenModal(true)}
                     className="btn btn-secondary"
-                    style={{ padding: "7px 12px", fontSize: "0.82rem", gap: "6px" }}
+                    style={{ padding: "6px 10px", fontSize: "0.8rem", gap: "5px", minHeight: "34px" }}
                     title="Read in Fullscreen"
                   >
-                    <Maximize2 size={15} />
+                    <Maximize2 size={14} />
                     <span>Fullscreen</span>
                   </button>
 
@@ -1001,11 +1021,11 @@ export default function Notes() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-secondary"
-                    style={{ padding: "7px 12px", fontSize: "0.82rem", gap: "6px" }}
+                    style={{ padding: "6px 10px", fontSize: "0.8rem", gap: "5px", minHeight: "34px" }}
                     title="Open original file in Google Drive"
                   >
-                    <ExternalLink size={15} />
-                    <span className="desktop-only">Open Drive</span>
+                    <ExternalLink size={14} />
+                    <span>Drive</span>
                   </a>
 
                   {/* Download PDF */}
@@ -1015,31 +1035,31 @@ export default function Notes() {
                     rel="noopener noreferrer"
                     download
                     className="btn btn-secondary"
-                    style={{ padding: "7px 12px", fontSize: "0.82rem", gap: "6px" }}
+                    style={{ padding: "6px 10px", fontSize: "0.8rem", gap: "5px", minHeight: "34px" }}
                     title="Direct PDF download"
                   >
-                    <Download size={15} />
-                    <span className="desktop-only">Download</span>
+                    <Download size={14} />
+                    <span>Download</span>
                   </a>
 
                   {/* Edit/Rename */}
                   <button
                     onClick={() => openEditModal(activeNote)}
                     className="btn btn-secondary"
-                    style={{ padding: "7px 10px" }}
+                    style={{ padding: "6px 9px", minHeight: "34px" }}
                     title="Rename"
                   >
-                    <Edit3 size={15} />
+                    <Edit3 size={14} />
                   </button>
 
-                  {/* Delete with Password Protection */}
+                  {/* Delete */}
                   <button
                     onClick={() => openDeleteModal(activeNote)}
                     className="btn btn-danger"
-                    style={{ padding: "7px 10px" }}
+                    style={{ padding: "6px 9px", minHeight: "34px" }}
                     title="Delete Note (Password required)"
                   >
-                    <Trash2 size={15} />
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>
@@ -1101,7 +1121,7 @@ export default function Notes() {
                 }}
               >
                 <span>
-                  💡 <strong>PDF Preview:</strong> Rendered directly inside PrepAI. Make sure your Google Drive link sharing is set to <em>"Anyone with the link can view"</em>.
+                  💡 <strong>PDF Preview:</strong> Rendered directly inside PrepAI. Ensure Google Drive sharing is <em>"Anyone with the link can view"</em>.
                 </span>
                 <button
                   onClick={() => handleCopyLink(activeNote)}
@@ -1134,8 +1154,15 @@ export default function Notes() {
               <FileText size={40} style={{ color: "var(--text-muted)", opacity: 0.5 }} />
               <h3 style={{ fontSize: "1.1rem", fontWeight: "700" }}>No PDF Note Selected</h3>
               <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", maxWidth: "340px" }}>
-                Select any note from the list on the left to preview the PDF directly here.
+                Select any note from the list to preview the PDF directly here.
               </p>
+              <button
+                onClick={() => setMobileTab("list")}
+                className="btn btn-primary mobile-only"
+                style={{ marginTop: "6px" }}
+              >
+                Go to Notes List
+              </button>
             </div>
           )}
         </div>
@@ -1220,7 +1247,6 @@ export default function Notes() {
                   )}
                 </div>
 
-                {/* Parse status feedback */}
                 {parseStatus.message && (
                   <div
                     style={{
@@ -1254,7 +1280,7 @@ export default function Notes() {
               </div>
 
               {/* File Name & Category Grid */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
                 <div>
                   <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "600", marginBottom: "6px" }}>
                     PDF File Name
@@ -1409,7 +1435,7 @@ export default function Notes() {
                 />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
                 <div>
                   <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "600", marginBottom: "6px" }}>
                     PDF File Name
@@ -1495,7 +1521,7 @@ export default function Notes() {
         </div>
       )}
 
-      {/* 7. Delete Confirmation Modal with Required Security Password */}
+      {/* 7. Delete Confirmation Modal with Password (Hidden from view) */}
       {showDeleteModal && activeNoteForAction && (
         <div className="modal-backdrop" onClick={() => setShowDeleteModal(false)}>
           <div
