@@ -94,9 +94,9 @@ export default function HRInterview({ onSessionSaved }) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "14px" }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
             <span className="badge badge-cyan">
@@ -104,11 +104,11 @@ export default function HRInterview({ onSessionSaved }) {
             </span>
             <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>Behavioral & Personal Fit</span>
           </div>
-          <h1 style={{ fontSize: "2rem" }}>HR Interview Simulator</h1>
+          <h1 style={{ fontSize: "clamp(1.5rem, 4vw, 2rem)" }}>HR Interview Simulator</h1>
         </div>
 
         {/* Category Controls */}
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap", width: "auto" }}>
           <select
             value={category}
             onChange={(e) => {
@@ -116,7 +116,7 @@ export default function HRInterview({ onSessionSaved }) {
               handleGenerateQuestion(e.target.value);
             }}
             className="input-field"
-            style={{ width: "auto", cursor: "pointer" }}
+            style={{ width: "auto", cursor: "pointer", flex: "1 1 180px", minHeight: "42px" }}
             disabled={isLoadingQuestion}
           >
             <option value="behavioral">🎯 Behavioral (STAR)</option>
@@ -130,7 +130,7 @@ export default function HRInterview({ onSessionSaved }) {
             onClick={() => handleGenerateQuestion()}
             className="btn btn-primary"
             disabled={isLoadingQuestion}
-            style={{ gap: "8px" }}
+            style={{ gap: "8px", flex: "1 1 140px", minHeight: "42px" }}
           >
             <RefreshCw size={16} className={isLoadingQuestion ? "spinner" : ""} />
             <span>{isLoadingQuestion ? "Drafting..." : "Next Question"}</span>
@@ -158,19 +158,19 @@ export default function HRInterview({ onSessionSaved }) {
         <div
           className="glass-panel"
           style={{
-            padding: "32px",
+            padding: "clamp(18px, 4vw, 32px)",
             borderLeft: "4px solid var(--accent-cyan)",
             display: "flex",
             flexDirection: "column",
-            gap: "22px",
+            gap: "18px",
           }}
         >
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px", flexWrap: "wrap" }}>
               <span className="badge badge-cyan">{questionData.category}</span>
               <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Target Length: 60 - 120 secs</span>
             </div>
-            <h2 style={{ fontSize: "1.75rem", lineHeight: "1.3" }}>
+            <h2 style={{ fontSize: "clamp(1.25rem, 4vw, 1.75rem)", lineHeight: "1.3" }}>
               "{questionData.question}"
             </h2>
           </div>
@@ -184,10 +184,10 @@ export default function HRInterview({ onSessionSaved }) {
                 gap: "10px",
                 background: "rgba(6, 182, 212, 0.06)",
                 border: "1px solid rgba(6, 182, 212, 0.2)",
-                padding: "14px 18px",
+                padding: "12px 16px",
                 borderRadius: "var(--radius-md)",
                 color: "var(--text-secondary)",
-                fontSize: "0.92rem",
+                fontSize: "0.9rem",
               }}
             >
               <HelpCircle size={18} color="var(--accent-cyan)" style={{ marginTop: "2px", flexShrink: 0 }} />
@@ -201,10 +201,10 @@ export default function HRInterview({ onSessionSaved }) {
           {/* STAR Framework Guidelines */}
           {questionData.star_framework_guide && (
             <div>
-              <div style={{ fontSize: "0.85rem", fontWeight: "700", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "10px" }}>
+              <div style={{ fontSize: "0.82rem", fontWeight: "700", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "8px" }}>
                 Recommended STAR Framework Structure
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "12px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 140px), 1fr))", gap: "10px" }}>
                 {[
                   { key: "situation", label: "S - Situation", tip: questionData.star_framework_guide.situation },
                   { key: "task", label: "T - Task", tip: questionData.star_framework_guide.task },
@@ -214,16 +214,16 @@ export default function HRInterview({ onSessionSaved }) {
                   <div
                     key={s.key}
                     style={{
-                      padding: "14px",
+                      padding: "12px",
                       background: "rgba(255, 255, 255, 0.03)",
                       border: "1px solid var(--border-subtle)",
                       borderRadius: "var(--radius-md)",
                     }}
                   >
-                    <div style={{ fontWeight: "700", color: "var(--accent-cyan)", fontSize: "0.9rem", marginBottom: "4px" }}>
+                    <div style={{ fontWeight: "700", color: "var(--accent-cyan)", fontSize: "0.88rem", marginBottom: "4px" }}>
                       {s.label}
                     </div>
-                    <div style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>
+                    <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
                       {s.tip}
                     </div>
                   </div>
@@ -233,23 +233,23 @@ export default function HRInterview({ onSessionSaved }) {
           )}
 
           {/* Pro-Tips & Pitfalls Grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 260px), 1fr))", gap: "14px" }}>
             {questionData.pro_tips && questionData.pro_tips.length > 0 && (
               <div
                 style={{
-                  padding: "14px 18px",
+                  padding: "14px 16px",
                   borderRadius: "var(--radius-md)",
                   background: "rgba(16, 185, 129, 0.04)",
                   border: "1px solid rgba(16, 185, 129, 0.2)",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--accent-emerald)", fontWeight: "700", fontSize: "0.9rem", marginBottom: "8px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--accent-emerald)", fontWeight: "700", fontSize: "0.88rem", marginBottom: "8px" }}>
                   <Lightbulb size={16} />
                   <span>Pro Tips</span>
                 </div>
                 <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "6px" }}>
                   {questionData.pro_tips.map((tip, i) => (
-                    <li key={i} style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
+                    <li key={i} style={{ fontSize: "0.84rem", color: "var(--text-secondary)" }}>
                       • {tip}
                     </li>
                   ))}
@@ -260,19 +260,19 @@ export default function HRInterview({ onSessionSaved }) {
             {questionData.pitfalls_to_avoid && questionData.pitfalls_to_avoid.length > 0 && (
               <div
                 style={{
-                  padding: "14px 18px",
+                  padding: "14px 16px",
                   borderRadius: "var(--radius-md)",
                   background: "rgba(244, 63, 94, 0.04)",
                   border: "1px solid rgba(244, 63, 94, 0.2)",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#fda4af", fontWeight: "700", fontSize: "0.9rem", marginBottom: "8px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#fda4af", fontWeight: "700", fontSize: "0.88rem", marginBottom: "8px" }}>
                   <AlertTriangle size={16} />
                   <span>Pitfalls to Avoid</span>
                 </div>
                 <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "6px" }}>
                   {questionData.pitfalls_to_avoid.map((pitfall, i) => (
-                    <li key={i} style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
+                    <li key={i} style={{ fontSize: "0.84rem", color: "var(--text-secondary)" }}>
                       • {pitfall}
                     </li>
                   ))}

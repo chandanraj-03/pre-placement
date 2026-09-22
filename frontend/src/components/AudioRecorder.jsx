@@ -352,7 +352,7 @@ export default function AudioRecorder({
   };
 
   return (
-    <div className="glass-panel" style={{ padding: "24px", position: "relative", overflow: "hidden" }}>
+    <div className="glass-panel" style={{ padding: "clamp(14px, 3vw, 24px)", position: "relative", overflow: "hidden" }}>
       {recordingState === "recording" && (
         <div
           style={{
@@ -389,14 +389,14 @@ export default function AudioRecorder({
 
       {/* State 1: Prep Countdown */}
       {recordingState === "prep" && (
-        <div style={{ textAlign: "center", padding: "40px 0" }}>
+        <div style={{ textAlign: "center", padding: "30px 0" }}>
           <p style={{ color: "var(--text-secondary)", fontSize: "1.1rem", marginBottom: "8px" }}>
             Get ready to speak...
           </p>
           <div
             style={{
               fontFamily: "var(--font-heading)",
-              fontSize: "4.5rem",
+              fontSize: "clamp(3.2rem, 12vw, 4.5rem)",
               fontWeight: "800",
               color: "var(--accent-primary)",
               textShadow: "0 0 30px rgba(99, 102, 241, 0.6)",
@@ -412,21 +412,22 @@ export default function AudioRecorder({
 
       {/* State 2: Idle (Ready to start) */}
       {recordingState === "idle" && (
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", padding: "20px 0" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", padding: "16px 0", textAlign: "center" }}>
           <button
             onClick={handleInitiateRecording}
             className="btn btn-primary"
             style={{
-              padding: "16px 36px",
-              fontSize: "1.1rem",
+              padding: "14px 32px",
+              fontSize: "1.05rem",
               borderRadius: "var(--radius-full)",
               gap: "12px",
+              maxWidth: "100%",
             }}
           >
             <Mic size={22} />
             <span>Start Speaking</span>
           </button>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", maxWidth: "420px" }}>
             Speak into your microphone. Speech-to-Text will automatically transcribe your words.
           </p>
         </div>
@@ -496,7 +497,7 @@ export default function AudioRecorder({
             onClick={handleStopRecording}
             className="btn btn-danger"
             style={{
-              padding: "12px 30px",
+              padding: "12px 28px",
               borderRadius: "var(--radius-full)",
               gap: "10px",
             }}
@@ -509,7 +510,7 @@ export default function AudioRecorder({
 
       {/* State 4: Recorded - Review What You Spoke & Submit */}
       {recordingState === "recorded" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           {/* Audio Player & Status Bar */}
           <div
             style={{
@@ -519,7 +520,7 @@ export default function AudioRecorder({
               flexWrap: "wrap",
               gap: "12px",
               background: "rgba(0, 0, 0, 0.25)",
-              padding: "14px 18px",
+              padding: "12px 16px",
               borderRadius: "var(--radius-md)",
               border: "1px solid var(--border-subtle)",
             }}
@@ -532,7 +533,7 @@ export default function AudioRecorder({
             </div>
 
             {audioUrl && (
-              <audio controls src={audioUrl} style={{ height: "36px", outline: "none", maxWidth: "280px" }} />
+              <audio controls src={audioUrl} style={{ height: "36px", outline: "none", width: "100%", maxWidth: "280px" }} />
             )}
           </div>
 
@@ -542,7 +543,7 @@ export default function AudioRecorder({
               background: "rgba(13, 19, 33, 0.75)",
               border: "1px solid rgba(6, 182, 212, 0.25)",
               borderRadius: "var(--radius-md)",
-              padding: "18px",
+              padding: "clamp(14px, 3vw, 18px)",
               display: "flex",
               flexDirection: "column",
               gap: "10px",
@@ -592,7 +593,7 @@ export default function AudioRecorder({
               }}
             />
 
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "0.78rem", color: "var(--text-muted)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "8px", fontSize: "0.78rem", color: "var(--text-muted)" }}>
               <span>💡 You can review or edit your spoken words above before submitting.</span>
               {audioBlobRef.current && (
                 <button
@@ -606,6 +607,7 @@ export default function AudioRecorder({
                     cursor: "pointer",
                     textDecoration: "underline",
                     fontSize: "0.78rem",
+                    padding: "4px 0",
                   }}
                 >
                   Re-transcribe with Whisper
@@ -615,12 +617,12 @@ export default function AudioRecorder({
           </div>
 
           {/* Action Buttons */}
-          <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", marginTop: "4px" }}>
+          <div style={{ display: "flex", justifyContent: "flex-end", flexWrap: "wrap", gap: "10px", marginTop: "4px" }}>
             <button
               onClick={handleReset}
               className="btn btn-secondary"
               disabled={isAnalyzing || isTranscribing}
-              style={{ gap: "8px" }}
+              style={{ gap: "8px", flex: "1 1 140px", justifyContent: "center" }}
             >
               <RotateCcw size={16} />
               <span>Record Again</span>
@@ -630,7 +632,7 @@ export default function AudioRecorder({
               onClick={handleSubmit}
               className="btn btn-primary"
               disabled={isAnalyzing || isTranscribing || !(transcribedText || liveTranscript).trim()}
-              style={{ gap: "8px", minWidth: "190px" }}
+              style={{ gap: "8px", flex: "1 1 180px", justifyContent: "center" }}
             >
               {isAnalyzing ? (
                 <>

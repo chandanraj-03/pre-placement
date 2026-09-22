@@ -80,7 +80,7 @@ export default function ModelAnswerCard({
       style={{
         border: "1px solid rgba(16, 185, 129, 0.35)",
         background: "linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(18, 25, 43, 0.9) 100%)",
-        padding: "20px",
+        padding: "clamp(16px, 3.5vw, 20px)",
         borderRadius: "var(--radius-md)",
       }}
     >
@@ -96,7 +96,7 @@ export default function ModelAnswerCard({
         }}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: "1 1 240px" }}>
           <div
             style={{
               width: "36px",
@@ -107,26 +107,27 @@ export default function ModelAnswerCard({
               alignItems: "center",
               justifyContent: "center",
               color: "var(--accent-emerald)",
+              flexShrink: 0,
             }}
           >
             <Sparkles size={18} />
           </div>
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <h4 style={{ fontSize: "1.05rem", color: "var(--text-primary)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+              <h4 style={{ fontSize: "clamp(0.98rem, 2.5vw, 1.05rem)", color: "var(--text-primary)" }}>
                 Ideal Spoken Answer (Practice Aloud)
               </h4>
               <span className="badge badge-emerald" style={{ fontSize: "0.68rem" }}>
                 Confidence Builder
               </span>
             </div>
-            <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
-              Read this aloud to get comfortable before you record your own response
+            <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
+              Read aloud to build verbal flow before recording your response
             </span>
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginLeft: "auto" }}>
           {onGenerateAnswer && (
             <button
               type="button"
@@ -136,10 +137,10 @@ export default function ModelAnswerCard({
               }}
               disabled={isGenerating}
               className="btn btn-secondary"
-              style={{ padding: "6px 12px", fontSize: "0.8rem", gap: "6px" }}
+              style={{ padding: "6px 12px", fontSize: "0.8rem", gap: "6px", minHeight: "unset" }}
             >
               <RefreshCw size={13} className={isGenerating ? "spinner" : ""} />
-              <span>{isGenerating ? "Drafting..." : "Generate New Version"}</span>
+              <span>{isGenerating ? "Drafting..." : "New Version"}</span>
             </button>
           )}
 
@@ -151,15 +152,15 @@ export default function ModelAnswerCard({
 
       {/* Expandable Body */}
       {isOpen && (
-        <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "14px" }}>
+        <div style={{ marginTop: "14px", display: "flex", flexDirection: "column", gap: "12px" }}>
           {/* Answer Text Area */}
           <div
             style={{
-              padding: "16px 20px",
+              padding: "14px 16px",
               background: "rgba(0, 0, 0, 0.35)",
               borderLeft: "3px solid var(--accent-emerald)",
               borderRadius: "var(--radius-sm)",
-              fontSize: "0.98rem",
+              fontSize: "clamp(0.92rem, 2.2vw, 0.98rem)",
               lineHeight: "1.75",
               color: "var(--text-primary)",
               fontFamily: "var(--font-sans)",
@@ -167,7 +168,7 @@ export default function ModelAnswerCard({
           >
             {answerText || (
               <span style={{ color: "var(--text-muted)", fontStyle: "italic" }}>
-                Click "Generate New Version" above to create an ideal spoken answer for this question.
+                Click "New Version" above to create an ideal spoken answer for this question.
               </span>
             )}
           </div>
@@ -175,13 +176,13 @@ export default function ModelAnswerCard({
           {/* Action Toolbar */}
           {answerText && (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
                 {/* Text to Speech Button */}
                 <button
                   type="button"
                   onClick={handleToggleSpeech}
                   className={isPlayingTTS ? "btn btn-danger" : "btn btn-emerald"}
-                  style={{ padding: "8px 16px", fontSize: "0.85rem", gap: "8px" }}
+                  style={{ padding: "8px 16px", fontSize: "0.85rem", gap: "8px", minHeight: "40px" }}
                 >
                   {isPlayingTTS ? (
                     <>
@@ -191,7 +192,7 @@ export default function ModelAnswerCard({
                   ) : (
                     <>
                       <Volume2 size={16} />
-                      <span>🔊 Listen to Pronunciation</span>
+                      <span>🔊 Listen to Audio</span>
                     </>
                   )}
                 </button>
@@ -201,25 +202,25 @@ export default function ModelAnswerCard({
                   type="button"
                   onClick={handleCopy}
                   className="btn btn-secondary"
-                  style={{ padding: "8px 14px", fontSize: "0.85rem", gap: "6px" }}
+                  style={{ padding: "8px 14px", fontSize: "0.85rem", gap: "6px", minHeight: "40px" }}
                 >
                   {isCopied ? <Check size={14} color="#10b981" /> : <Copy size={14} />}
                   <span>{isCopied ? "Copied!" : "Copy"}</span>
                 </button>
               </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.8rem", color: "var(--text-secondary)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.78rem", color: "var(--text-secondary)" }}>
                 <HeartHandshake size={15} color="var(--accent-emerald)" />
-                <span>Tip: Practice reading this once or twice to remove speaking hesitation!</span>
+                <span>Tip: Read aloud once or twice to banish hesitation!</span>
               </div>
             </div>
           )}
 
           {/* Tips if present */}
           {tips && tips.length > 0 && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "4px" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "2px" }}>
               {tips.map((t, i) => (
-                <span key={i} style={{ fontSize: "0.78rem", padding: "4px 10px", background: "rgba(255, 255, 255, 0.04)", borderRadius: "var(--radius-sm)", color: "var(--text-secondary)" }}>
+                <span key={i} style={{ fontSize: "0.76rem", padding: "4px 8px", background: "rgba(255, 255, 255, 0.04)", borderRadius: "var(--radius-sm)", color: "var(--text-secondary)" }}>
                   💡 {t}
                 </span>
               ))}

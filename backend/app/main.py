@@ -6,6 +6,7 @@ from app.routes.hr_routes import router as hr_router
 from app.routes.resume_routes import router as resume_router
 from app.routes.history_routes import router as history_router
 from app.routes.stt_routes import router as stt_router
+from app.routes.note_routes import router as note_router
 from app.config import PORT, HOST
 
 logging.basicConfig(
@@ -15,7 +16,7 @@ logging.basicConfig(
 
 app = FastAPI(
     title="Personal AI Pre-Placement Preparation Assistant API",
-    description="Backend API for GD practice, HR interviews, Resume mock rounds, and speech communication coaching.",
+    description="Backend API for GD practice, HR interviews, Resume mock rounds, notes management, and speech communication coaching.",
     version="1.0.0",
 )
 
@@ -34,6 +35,7 @@ app.include_router(hr_router)
 app.include_router(resume_router)
 app.include_router(history_router)
 app.include_router(stt_router)
+app.include_router(note_router)
 
 @app.get("/")
 async def root():

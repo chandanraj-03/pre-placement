@@ -197,4 +197,60 @@ export const api = {
   async resetAllData() {
     return request("/api/history/reset-all", { method: "POST" });
   },
+
+  // Notes & Google Drive PDF Integration
+  async getNotes(category = null, search = null, sortBy = "newest") {
+    const params = new URLSearchParams();
+    if (category && category !== "All") params.append("category", category);
+    if (search && search.trim()) params.append("search", search.trim());
+    if (sortBy) params.append("sort_by", sortBy);
+    const queryString = params.toString();
+    return request(`/api/notes${queryString ? `?${queryString}` : ""}`);
+  },
+
+  async getNoteCategories() {
+    return request("/api/notes/categories");
+  },
+
+  async parseGDriveLink(gdriveUrl) {
+    return request("/api/notes/parse-link", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gdrive_url: gdriveUrl }),
+    });
+  },
+
+  async addNote({ gdriveUrl, title, fileName, category, description }) {
+    return request("/api/notes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        gdrive_url: gdriveUrl,
+        title: title || null,
+        file_name: fileName || null,
+        category: category || "General",
+        description: description || "",
+      }),
+    });
+  },
+
+  async updateNote(noteId, { title, fileName, category, description }) {
+    return request(`/api/notes/${noteId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title,
+        file_name: fileName,
+        category,
+        description,
+      }),
+    });
+  },
+
+  async deleteNote(noteId, password = "") {
+    const query = password ? `?password=${encodeURIComponent(password)}` : "";
+    return request(`/api/notes/${noteId}${query}`, {
+      method: "DELETE",
+    });
+  },
 };

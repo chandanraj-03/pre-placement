@@ -141,9 +141,9 @@ export default function ResumeInterview({ onSessionSaved }) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "14px" }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
             <span className="badge badge-emerald">
@@ -151,14 +151,14 @@ export default function ResumeInterview({ onSessionSaved }) {
             </span>
             <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>Technical & Project Deep Dives</span>
           </div>
-          <h1 style={{ fontSize: "2rem" }}>Resume-Based Mock Round</h1>
+          <h1 style={{ fontSize: "clamp(1.5rem, 4vw, 2rem)" }}>Resume-Based Mock Round</h1>
         </div>
 
         {resumeData && (
           <button
             onClick={() => fileInputRef.current?.click()}
             className="btn btn-secondary"
-            style={{ gap: "8px" }}
+            style={{ gap: "8px", minHeight: "42px" }}
           >
             <Upload size={16} />
             <span>Upload New Resume</span>
@@ -193,12 +193,12 @@ export default function ResumeInterview({ onSessionSaved }) {
         <div
           className="glass-panel"
           style={{
-            padding: "50px 30px",
+            padding: "clamp(30px, 6vw, 50px) 16px",
             textAlign: "center",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: "20px",
+            gap: "18px",
             border: "2px dashed var(--border-subtle)",
           }}
           onDragOver={(e) => e.preventDefault()}
@@ -209,8 +209,8 @@ export default function ResumeInterview({ onSessionSaved }) {
         >
           <div
             style={{
-              width: "64px",
-              height: "64px",
+              width: "56px",
+              height: "56px",
               borderRadius: "50%",
               background: "rgba(16, 185, 129, 0.15)",
               display: "flex",
@@ -219,14 +219,14 @@ export default function ResumeInterview({ onSessionSaved }) {
               color: "var(--accent-emerald)",
             }}
           >
-            <Upload size={32} />
+            <Upload size={28} />
           </div>
 
           <div>
-            <h3 style={{ fontSize: "1.4rem", marginBottom: "8px" }}>
+            <h3 style={{ fontSize: "1.3rem", marginBottom: "8px" }}>
               Upload Your Resume (PDF)
             </h3>
-            <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", maxWidth: "480px", margin: "0 auto" }}>
+            <p style={{ color: "var(--text-secondary)", fontSize: "0.92rem", maxWidth: "480px", margin: "0 auto", lineHeight: "1.6" }}>
               Our AI analyzes your listed projects, technical skills, and experience to ask the exact questions a senior interviewer will challenge you on.
             </p>
           </div>
@@ -235,7 +235,7 @@ export default function ResumeInterview({ onSessionSaved }) {
             onClick={() => fileInputRef.current?.click()}
             className="btn btn-primary"
             disabled={isUploading}
-            style={{ padding: "14px 32px", fontSize: "1rem" }}
+            style={{ padding: "12px 28px", fontSize: "0.98rem" }}
           >
             {isUploading ? (
               <>
@@ -249,35 +249,35 @@ export default function ResumeInterview({ onSessionSaved }) {
               </>
             )}
           </button>
-          <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Drag & drop your PDF anywhere in this box</span>
+          <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>Drag & drop your PDF anywhere in this box</span>
         </div>
       )}
 
       {/* Case 2: Resume Loaded */}
       {resumeData && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {/* Parsed Resume Overview Bar */}
           <div
             className="glass-panel"
             style={{
-              padding: "24px",
+              padding: "clamp(16px, 3vw, 24px)",
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
               flexWrap: "wrap",
-              gap: "16px",
+              gap: "14px",
               borderLeft: "4px solid var(--accent-emerald)",
             }}
           >
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px", flexWrap: "wrap" }}>
                 <FileCheck size={18} color="var(--accent-emerald)" />
-                <span style={{ fontWeight: "700", fontSize: "1.15rem" }}>
+                <span style={{ fontWeight: "700", fontSize: "1.1rem" }}>
                   {resumeData.candidate_name || "Parsed Candidate Resume"}
                 </span>
                 <span className="badge badge-emerald">PDF Active</span>
               </div>
-              <p style={{ color: "var(--text-secondary)", fontSize: "0.88rem" }}>
+              <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
                 Extracted: {resumeData.projects?.length || 0} Projects • {resumeData.skills?.technical?.length || 0} Tech Skills
               </p>
             </div>
@@ -302,15 +302,15 @@ export default function ResumeInterview({ onSessionSaved }) {
             <div
               className="glass-panel-glow"
               style={{
-                padding: "30px",
+                padding: "clamp(18px, 4vw, 30px)",
                 borderLeft: "4px solid var(--accent-emerald)",
                 display: "flex",
                 flexDirection: "column",
-                gap: "18px",
+                gap: "16px",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
                   <span className="badge badge-emerald">{activeQuestion.category || "Technical Depth"}</span>
                   <span
                     className={
@@ -324,12 +324,12 @@ export default function ResumeInterview({ onSessionSaved }) {
                     {activeQuestion.difficulty || "Medium"}
                   </span>
                 </div>
-                <span style={{ fontSize: "0.85rem", color: "var(--accent-cyan)", fontWeight: "600" }}>
+                <span style={{ fontSize: "0.82rem", color: "var(--accent-cyan)", fontWeight: "600" }}>
                   {activeQuestion.topic}
                 </span>
               </div>
 
-              <h2 style={{ fontSize: "1.65rem", lineHeight: "1.3" }}>
+              <h2 style={{ fontSize: "clamp(1.2rem, 3.8vw, 1.65rem)", lineHeight: "1.3" }}>
                 "{activeQuestion.question}"
               </h2>
 
@@ -441,7 +441,7 @@ export default function ResumeInterview({ onSessionSaved }) {
               </button>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {questions.map((q, idx) => {
                 const isSelected = activeQuestion?.question === q.question;
                 return (
@@ -450,31 +450,32 @@ export default function ResumeInterview({ onSessionSaved }) {
                     onClick={() => handleSelectQuestion(q)}
                     className="glass-panel"
                     style={{
-                      padding: "18px 22px",
+                      padding: "14px 16px",
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      gap: "16px",
+                      flexWrap: "wrap",
+                      gap: "12px",
                       borderLeft: isSelected ? "4px solid var(--accent-emerald)" : "1px solid var(--border-subtle)",
                       background: isSelected ? "rgba(16, 185, 129, 0.08)" : "var(--bg-card)",
                     }}
                   >
-                    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "6px", flex: "1 1 240px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
                         <span className="badge badge-emerald" style={{ fontSize: "0.7rem" }}>
                           {q.category || "Project"}
                         </span>
-                        <span style={{ fontSize: "0.78rem", color: "var(--accent-cyan)", fontWeight: "600" }}>
+                        <span style={{ fontSize: "0.76rem", color: "var(--accent-cyan)", fontWeight: "600" }}>
                           {q.topic}
                         </span>
                       </div>
-                      <div style={{ fontSize: "0.98rem", fontWeight: "600", color: "var(--text-primary)" }}>
+                      <div style={{ fontSize: "0.94rem", fontWeight: "600", color: "var(--text-primary)", lineHeight: "1.4" }}>
                         {q.question}
                       </div>
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginLeft: "auto" }}>
                       <span
                         className={
                           q.difficulty === "Hard"

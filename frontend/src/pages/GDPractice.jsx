@@ -100,9 +100,9 @@ export default function GDPractice({ onSessionSaved }) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "14px" }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
             <span className="badge badge-indigo">
@@ -110,11 +110,11 @@ export default function GDPractice({ onSessionSaved }) {
             </span>
             <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>Round 1 of Placements</span>
           </div>
-          <h1 style={{ fontSize: "2rem" }}>Group Discussion Practice</h1>
+          <h1 style={{ fontSize: "clamp(1.5rem, 4vw, 2rem)" }}>Group Discussion Practice</h1>
         </div>
 
         {/* Category Selector */}
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap", width: "auto" }}>
           <select
             value={category}
             onChange={(e) => {
@@ -122,7 +122,7 @@ export default function GDPractice({ onSessionSaved }) {
               handleGenerateTopic(e.target.value);
             }}
             className="input-field"
-            style={{ width: "auto", cursor: "pointer" }}
+            style={{ width: "auto", cursor: "pointer", flex: "1 1 180px", minHeight: "42px" }}
             disabled={isLoadingTopic}
           >
             <option value="trending">🔥 Trending Placements</option>
@@ -136,7 +136,7 @@ export default function GDPractice({ onSessionSaved }) {
             onClick={() => handleGenerateTopic()}
             className="btn btn-primary"
             disabled={isLoadingTopic}
-            style={{ gap: "8px" }}
+            style={{ gap: "8px", flex: "1 1 130px", minHeight: "42px" }}
           >
             <RefreshCw size={16} className={isLoadingTopic ? "spinner" : ""} />
             <span>{isLoadingTopic ? "Generating..." : "New Topic"}</span>
@@ -164,33 +164,36 @@ export default function GDPractice({ onSessionSaved }) {
         <div
           className="glass-panel"
           style={{
-            padding: "30px",
+            padding: "clamp(18px, 4vw, 30px)",
             borderLeft: "4px solid var(--accent-primary)",
             display: "flex",
             flexDirection: "column",
-            gap: "20px",
+            gap: "18px",
           }}
         >
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px", flexWrap: "wrap" }}>
               <span className="badge badge-indigo">{topicData.category}</span>
               <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Target Duration: 1.5 - 2 mins</span>
             </div>
-            <h2 style={{ fontSize: "1.7rem", lineHeight: "1.3", color: "var(--text-primary)" }}>
+            <h2 style={{ fontSize: "clamp(1.25rem, 4vw, 1.7rem)", lineHeight: "1.3", color: "var(--text-primary)" }}>
               "{topicData.topic}"
             </h2>
-            <p style={{ color: "var(--text-secondary)", fontSize: "1rem", marginTop: "10px", lineHeight: "1.6" }}>
+            <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", marginTop: "8px", lineHeight: "1.6" }}>
               {topicData.explanation}
             </p>
           </div>
 
-          {/* Subtabs for Topic Study Material */}
+          {/* Subtabs for Topic Study Material - Scrollable on mobile */}
           <div
             style={{
               display: "flex",
               borderBottom: "1px solid var(--border-subtle)",
-              gap: "12px",
-              marginTop: "6px",
+              gap: "8px",
+              marginTop: "4px",
+              overflowX: "auto",
+              WebkitOverflowScrolling: "touch",
+              paddingBottom: "2px",
             }}
           >
             {[
@@ -214,10 +217,12 @@ export default function GDPractice({ onSessionSaved }) {
                     borderBottom: isActive ? "2px solid var(--accent-primary)" : "2px solid transparent",
                     color: isActive ? "var(--text-primary)" : "var(--text-muted)",
                     fontWeight: isActive ? "600" : "500",
-                    fontSize: "0.9rem",
+                    fontSize: "0.88rem",
                     cursor: "pointer",
                     outline: "none",
+                    whiteSpace: "nowrap",
                     transition: "all 0.2s ease",
+                    flexShrink: 0,
                   }}
                 >
                   <Icon size={16} />
@@ -229,23 +234,23 @@ export default function GDPractice({ onSessionSaved }) {
 
           {/* Tab 1: Arguments */}
           {activeTab === "arguments" && (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "18px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: "14px" }}>
               {/* For */}
               <div
                 style={{
-                  padding: "18px",
+                  padding: "16px",
                   borderRadius: "var(--radius-md)",
                   background: "rgba(16, 185, 129, 0.05)",
                   border: "1px solid rgba(16, 185, 129, 0.2)",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--accent-emerald)", marginBottom: "12px", fontWeight: "700" }}>
-                  <ThumbsUp size={18} />
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--accent-emerald)", marginBottom: "10px", fontWeight: "700" }}>
+                  <ThumbsUp size={16} />
                   <span>Arguments Supporting (FOR)</span>
                 </div>
-                <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
+                <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "8px" }}>
                   {topicData.arguments_for?.map((arg, i) => (
-                    <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px", fontSize: "0.9rem", color: "var(--text-secondary)" }}>
+                    <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "0.88rem", color: "var(--text-secondary)" }}>
                       <span style={{ color: "var(--accent-emerald)", fontWeight: "700" }}>+</span>
                       <span>{arg}</span>
                     </li>
@@ -256,19 +261,19 @@ export default function GDPractice({ onSessionSaved }) {
               {/* Against */}
               <div
                 style={{
-                  padding: "18px",
+                  padding: "16px",
                   borderRadius: "var(--radius-md)",
                   background: "rgba(244, 63, 94, 0.05)",
                   border: "1px solid rgba(244, 63, 94, 0.2)",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#fda4af", marginBottom: "12px", fontWeight: "700" }}>
-                  <ThumbsDown size={18} />
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#fda4af", marginBottom: "10px", fontWeight: "700" }}>
+                  <ThumbsDown size={16} />
                   <span>Counterpoints (AGAINST)</span>
                 </div>
-                <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
+                <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "8px" }}>
                   {topicData.arguments_against?.map((arg, i) => (
-                    <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px", fontSize: "0.9rem", color: "var(--text-secondary)" }}>
+                    <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "0.88rem", color: "var(--text-secondary)" }}>
                       <span style={{ color: "#fda4af", fontWeight: "700" }}>−</span>
                       <span>{arg}</span>
                     </li>
@@ -280,21 +285,21 @@ export default function GDPractice({ onSessionSaved }) {
 
           {/* Tab 2: Power Vocabulary */}
           {activeTab === "vocab" && (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "14px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 150px), 1fr))", gap: "10px" }}>
               {topicData.power_vocabulary?.map((v, i) => (
                 <div
                   key={i}
                   style={{
-                    padding: "14px",
+                    padding: "12px",
                     background: "rgba(255, 255, 255, 0.03)",
                     border: "1px solid var(--border-subtle)",
                     borderRadius: "var(--radius-md)",
                   }}
                 >
-                  <div style={{ fontWeight: "700", color: "var(--accent-cyan)", fontSize: "0.95rem" }}>
+                  <div style={{ fontWeight: "700", color: "var(--accent-cyan)", fontSize: "0.9rem" }}>
                     {v.word}
                   </div>
-                  <div style={{ fontSize: "0.82rem", color: "var(--text-secondary)", marginTop: "4px" }}>
+                  <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "4px" }}>
                     {v.meaning}
                   </div>
                 </div>
@@ -304,21 +309,21 @@ export default function GDPractice({ onSessionSaved }) {
 
           {/* Tab 3: Framing Hooks */}
           {activeTab === "framing" && (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "18px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: "14px" }}>
               <div
                 style={{
-                  padding: "18px",
+                  padding: "16px",
                   borderRadius: "var(--radius-md)",
                   background: "rgba(99, 102, 241, 0.05)",
                   border: "1px solid rgba(99, 102, 241, 0.2)",
                 }}
               >
-                <div style={{ fontWeight: "700", color: "var(--accent-primary)", marginBottom: "10px", fontSize: "0.95rem" }}>
+                <div style={{ fontWeight: "700", color: "var(--accent-primary)", marginBottom: "8px", fontSize: "0.92rem" }}>
                   🏁 High-Impact Opening Statements
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   {topicData.opening_points?.map((pt, i) => (
-                    <p key={i} style={{ fontSize: "0.88rem", color: "var(--text-secondary)", fontStyle: "italic" }}>
+                    <p key={i} style={{ fontSize: "0.86rem", color: "var(--text-secondary)", fontStyle: "italic" }}>
                       "{pt}"
                     </p>
                   ))}
@@ -327,18 +332,18 @@ export default function GDPractice({ onSessionSaved }) {
 
               <div
                 style={{
-                  padding: "18px",
+                  padding: "16px",
                   borderRadius: "var(--radius-md)",
                   background: "rgba(6, 182, 212, 0.05)",
                   border: "1px solid rgba(6, 182, 212, 0.2)",
                 }}
               >
-                <div style={{ fontWeight: "700", color: "var(--accent-cyan)", marginBottom: "10px", fontSize: "0.95rem" }}>
+                <div style={{ fontWeight: "700", color: "var(--accent-cyan)", marginBottom: "8px", fontSize: "0.92rem" }}>
                   🎯 Strong Concluding Syntheses
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   {topicData.closing_points?.map((pt, i) => (
-                    <p key={i} style={{ fontSize: "0.88rem", color: "var(--text-secondary)", fontStyle: "italic" }}>
+                    <p key={i} style={{ fontSize: "0.86rem", color: "var(--text-secondary)", fontStyle: "italic" }}>
                       "{pt}"
                     </p>
                   ))}

@@ -5,6 +5,7 @@ import GDPractice from "./pages/GDPractice";
 import HRInterview from "./pages/HRInterview";
 import ResumeInterview from "./pages/ResumeInterview";
 import Analytics from "./pages/Analytics";
+import Notes from "./pages/Notes";
 import { api, API_BASE } from "./api/client";
 import { Heart } from "lucide-react";
 
@@ -17,7 +18,7 @@ export default function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace("#", "");
-      if (["dashboard", "gd", "hr", "resume", "analytics"].includes(hash)) {
+      if (["dashboard", "gd", "hr", "resume", "notes", "analytics"].includes(hash)) {
         setActiveTab(hash);
       }
     };
@@ -91,7 +92,7 @@ export default function App() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div className="app-container">
       {/* Navbar Header */}
       <Navbar
         activeTab={activeTab}
@@ -102,15 +103,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main
-        style={{
-          flex: 1,
-          maxWidth: "1320px",
-          width: "100%",
-          margin: "0 auto",
-          padding: "36px 20px 60px 20px",
-        }}
-      >
+      <main className="main-content">
         {activeTab === "dashboard" && (
           <Dashboard
             onNavigate={handleTabChange}
@@ -137,6 +130,10 @@ export default function App() {
           />
         )}
 
+        {activeTab === "notes" && (
+          <Notes />
+        )}
+
         {activeTab === "analytics" && (
           <Analytics />
         )}
@@ -146,14 +143,14 @@ export default function App() {
       <footer
         style={{
           borderTop: "1px solid var(--border-subtle)",
-          background: "rgba(10, 13, 23, 0.9)",
-          padding: "24px 20px",
+          background: "rgba(10, 13, 23, 0.95)",
+          padding: "20px 16px",
           textAlign: "center",
-          fontSize: "0.85rem",
+          fontSize: "0.82rem",
           color: "var(--text-muted)",
         }}
       >
-        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px" }}>
           <div>
             <strong>PrepAI</strong> • Personal Pre-Placement Preparation Assistant
           </div>

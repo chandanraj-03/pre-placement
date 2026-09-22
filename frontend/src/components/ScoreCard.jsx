@@ -91,54 +91,54 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       {/* Header Banner with Overall Score & Summary */}
       <div
         className="glass-panel-glow"
         style={{
-          padding: "28px",
+          padding: "clamp(18px, 4vw, 28px)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           flexWrap: "wrap",
-          gap: "20px",
+          gap: "16px",
           background: "linear-gradient(135deg, rgba(18, 25, 43, 0.9) 0%, rgba(30, 41, 70, 0.8) 100%)",
         }}
       >
-        <div style={{ maxWidth: "560px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+        <div style={{ maxWidth: "560px", flex: "1 1 280px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px", flexWrap: "wrap" }}>
             <span className="badge badge-indigo">
               <Award size={13} /> AI Evaluation Report
             </span>
-            <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
+            <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
               Engine: {analysis.stt_provider === "groq_whisper" ? "Groq Whisper STT" : "Speech-to-Text"}
             </span>
           </div>
-          <h2 style={{ fontSize: "1.7rem", marginBottom: "8px" }}>
+          <h2 style={{ fontSize: "clamp(1.25rem, 4vw, 1.7rem)", marginBottom: "6px", lineHeight: "1.25" }}>
             {scores.overall >= 80
               ? "Impressive Performance!"
               : scores.overall >= 65
               ? "Solid Attempt with Clear Upside"
               : "Needs More Polish & Practice"}
           </h2>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", lineHeight: "1.6" }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.92rem", lineHeight: "1.6" }}>
             {feedback.summary || "Here is your detailed communication and content breakdown."}
           </p>
         </div>
 
         {/* Circular Overall Score Indicator */}
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto" }}>
           <div
             style={{
               position: "relative",
-              width: "110px",
-              height: "110px",
+              width: "100px",
+              height: "100px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <svg width="110" height="110" viewBox="0 0 110 110">
+            <svg width="100" height="100" viewBox="0 0 110 110">
               <circle
                 cx="55"
                 cy="55"
@@ -162,10 +162,10 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
               />
             </svg>
             <div style={{ position: "absolute", textAlign: "center" }}>
-              <div style={{ fontFamily: "var(--font-heading)", fontSize: "2rem", fontWeight: "800", lineHeight: "1" }}>
+              <div style={{ fontFamily: "var(--font-heading)", fontSize: "1.85rem", fontWeight: "800", lineHeight: "1" }}>
                 {scores.overall}
               </div>
-              <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase" }}>
+              <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", textTransform: "uppercase" }}>
                 Overall
               </div>
             </div>
@@ -178,7 +178,7 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
         <div
           className="glass-panel"
           style={{
-            padding: "24px",
+            padding: "clamp(16px, 3.5vw, 24px)",
             borderLeft: "4px solid var(--accent-cyan)",
             background: "rgba(13, 19, 33, 0.8)",
           }}
@@ -191,6 +191,8 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
               justifyContent: "space-between",
               cursor: "pointer",
               userSelect: "none",
+              flexWrap: "wrap",
+              gap: "10px",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -204,23 +206,24 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
                   alignItems: "center",
                   justifyContent: "center",
                   color: "var(--accent-cyan)",
+                  flexShrink: 0,
                 }}
               >
                 <FileText size={18} />
               </div>
               <div>
-                <h3 style={{ fontSize: "1.1rem", color: "var(--text-primary)" }}>
-                  What You Spoke (Speech-to-Text Transcript)
+                <h3 style={{ fontSize: "1.05rem", color: "var(--text-primary)" }}>
+                  What You Spoke (Speech Transcript)
                 </h3>
-                <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
                   {analysis.transcript.trim().split(/\s+/).length} Words recorded
-                  {fillerData.total_count > 0 && ` • Highlighted ${fillerData.total_count} filler words`}
+                  {fillerData.total_count > 0 && ` • ${fillerData.total_count} fillers highlighted`}
                 </span>
               </div>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <span className="badge badge-cyan">Transcribed</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginLeft: "auto" }}>
+              <span className="badge badge-cyan" style={{ fontSize: "0.7rem" }}>Transcribed</span>
               {showTranscript ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </div>
           </div>
@@ -228,12 +231,12 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
           {showTranscript && (
             <div
               style={{
-                marginTop: "16px",
-                padding: "18px",
+                marginTop: "14px",
+                padding: "14px 16px",
                 background: "rgba(0, 0, 0, 0.35)",
                 borderRadius: "var(--radius-md)",
                 border: "1px solid var(--border-subtle)",
-                fontSize: "1rem",
+                fontSize: "0.95rem",
                 color: "var(--text-primary)",
                 lineHeight: "1.75",
                 maxHeight: "260px",
@@ -247,7 +250,7 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
       )}
 
       {/* Sub-Scores Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "14px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(clamp(130px, 42vw, 180px), 1fr))", gap: "10px" }}>
         {[
           { label: "Fluency", val: scores.fluency, desc: "Smoothness & Flow" },
           { label: "Grammar", val: scores.grammar, desc: "Syntax & Accuracy" },
@@ -259,29 +262,29 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
             key={idx}
             className="glass-panel"
             style={{
-              padding: "18px",
+              padding: "14px 12px",
               display: "flex",
               flexDirection: "column",
-              gap: "8px",
+              gap: "6px",
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontWeight: "600" }}>
+              <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: "600" }}>
                 {item.label}
               </span>
               <span
                 style={{
                   fontFamily: "var(--font-heading)",
                   fontWeight: "700",
-                  fontSize: "1.2rem",
+                  fontSize: "1.1rem",
                   color: getScoreColor(item.val),
                 }}
               >
-                {item.val}<span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>/100</span>
+                {item.val}<span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>/100</span>
               </span>
             </div>
             {/* Progress bar */}
-            <div style={{ height: "6px", width: "100%", background: "rgba(255, 255, 255, 0.08)", borderRadius: "3px", overflow: "hidden" }}>
+            <div style={{ height: "5px", width: "100%", background: "rgba(255, 255, 255, 0.08)", borderRadius: "3px", overflow: "hidden" }}>
               <div
                 style={{
                   height: "100%",
@@ -292,57 +295,58 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
                 }}
               />
             </div>
-            <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>{item.desc}</span>
+            <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>{item.desc}</span>
           </div>
         ))}
       </div>
 
       {/* Metrics Row: Duration, Speaking Pace, Filler Words */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px" }}>
-        <div className="glass-panel" style={{ padding: "18px" }}>
-          <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", textTransform: "uppercase" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 200px), 1fr))", gap: "12px" }}>
+        <div className="glass-panel" style={{ padding: "16px 14px" }}>
+          <span style={{ fontSize: "0.76rem", color: "var(--text-muted)", textTransform: "uppercase" }}>
             Speaking Duration
           </span>
-          <div style={{ fontSize: "1.4rem", fontWeight: "700", marginTop: "4px", color: "var(--text-primary)" }}>
+          <div style={{ fontSize: "1.3rem", fontWeight: "700", marginTop: "4px", color: "var(--text-primary)" }}>
             {formatDuration(duration)}
           </div>
-          <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-            Ideal duration: 1 to 2.5 minutes
+          <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
+            Ideal: 1 to 2.5 minutes
           </span>
         </div>
 
-        <div className="glass-panel" style={{ padding: "18px" }}>
-          <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", textTransform: "uppercase" }}>
+        <div className="glass-panel" style={{ padding: "16px 14px" }}>
+          <span style={{ fontSize: "0.76rem", color: "var(--text-muted)", textTransform: "uppercase" }}>
             Speaking Pace
           </span>
-          <div style={{ fontSize: "1.4rem", fontWeight: "700", marginTop: "4px", color: wpm >= 120 && wpm <= 160 ? "var(--accent-emerald)" : "var(--accent-amber)" }}>
+          <div style={{ fontSize: "1.3rem", fontWeight: "700", marginTop: "4px", color: wpm >= 120 && wpm <= 160 ? "var(--accent-emerald)" : "var(--accent-amber)" }}>
             {wpm > 0 ? `${wpm} WPM` : "Calculated"}
           </div>
-          <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-            Ideal pace: 130 - 160 words/min
+          <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
+            Ideal: 130 - 160 words/min
           </span>
         </div>
 
-        <div className="glass-panel" style={{ padding: "18px" }}>
+        <div className="glass-panel" style={{ padding: "16px 14px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", textTransform: "uppercase" }}>
+            <span style={{ fontSize: "0.76rem", color: "var(--text-muted)", textTransform: "uppercase" }}>
               Filler Words
             </span>
             <span
               className={fillerData.total_count > 5 ? "badge badge-rose" : fillerData.total_count > 2 ? "badge badge-amber" : "badge badge-emerald"}
+              style={{ fontSize: "0.7rem" }}
             >
               {fillerData.total_count} Detected
             </span>
           </div>
 
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "10px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "8px" }}>
             {fillerData.breakdown && Object.keys(fillerData.breakdown).length > 0 ? (
               Object.entries(fillerData.breakdown).map(([word, count]) => (
                 <span
                   key={word}
                   style={{
-                    fontSize: "0.75rem",
-                    padding: "3px 8px",
+                    fontSize: "0.74rem",
+                    padding: "2px 7px",
                     borderRadius: "var(--radius-sm)",
                     background: "rgba(244, 63, 94, 0.12)",
                     border: "1px solid rgba(244, 63, 94, 0.3)",
@@ -353,7 +357,7 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
                 </span>
               ))
             ) : (
-              <span style={{ fontSize: "0.85rem", color: "var(--accent-emerald)" }}>
+              <span style={{ fontSize: "0.82rem", color: "var(--accent-emerald)" }}>
                 Zero filler words detected! Excellent!
               </span>
             )}
@@ -363,17 +367,17 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
 
       {/* STAR Framework Analysis (For HR questions or if applicable) */}
       {starData && starData.applicable && (
-        <div className="glass-panel" style={{ padding: "22px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
+        <div className="glass-panel" style={{ padding: "18px 16px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
             <span className="badge badge-cyan">Behavioral Analysis</span>
-            <h3 style={{ fontSize: "1.1rem" }}>STAR Framework Check</h3>
+            <h3 style={{ fontSize: "1.05rem" }}>STAR Framework Check</h3>
           </div>
 
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", marginBottom: "16px" }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.88rem", marginBottom: "14px", lineHeight: "1.5" }}>
             {starData.assessment}
           </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "12px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 130px), 1fr))", gap: "10px" }}>
             {[
               { key: "situation_present", label: "Situation", desc: "Context set" },
               { key: "task_present", label: "Task", desc: "Goal defined" },
@@ -385,25 +389,25 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
                 <div
                   key={item.key}
                   style={{
-                    padding: "12px",
+                    padding: "10px",
                     borderRadius: "var(--radius-md)",
                     background: isPresent ? "rgba(16, 185, 129, 0.08)" : "rgba(244, 63, 94, 0.08)",
                     border: `1px solid ${isPresent ? "rgba(16, 185, 129, 0.25)" : "rgba(244, 63, 94, 0.25)"}`,
                     display: "flex",
                     alignItems: "center",
-                    gap: "10px",
+                    gap: "8px",
                   }}
                 >
                   {isPresent ? (
-                    <CheckCircle2 size={20} color="#10b981" />
+                    <CheckCircle2 size={18} color="#10b981" />
                   ) : (
-                    <XCircle size={20} color="#f43f5e" />
+                    <XCircle size={18} color="#f43f5e" />
                   )}
                   <div>
-                    <div style={{ fontWeight: "700", fontSize: "0.9rem", color: isPresent ? "#10b981" : "#fda4af" }}>
+                    <div style={{ fontWeight: "700", fontSize: "0.85rem", color: isPresent ? "#10b981" : "#fda4af" }}>
                       {item.label}
                     </div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                    <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
                       {item.desc}
                     </div>
                   </div>
@@ -415,43 +419,43 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
       )}
 
       {/* Strengths & Weaknesses Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "18px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: "14px" }}>
         {/* Strengths */}
-        <div className="glass-panel" style={{ padding: "20px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px", color: "var(--accent-emerald)" }}>
-            <CheckCircle2 size={20} />
-            <h3 style={{ fontSize: "1.05rem", color: "var(--text-primary)" }}>What You Did Well</h3>
+        <div className="glass-panel" style={{ padding: "18px 16px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", color: "var(--accent-emerald)" }}>
+            <CheckCircle2 size={18} />
+            <h3 style={{ fontSize: "1rem", color: "var(--text-primary)" }}>What You Did Well</h3>
           </div>
-          <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
+          <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "8px" }}>
             {feedback.strengths && feedback.strengths.length > 0 ? (
               feedback.strengths.map((s, i) => (
-                <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px", fontSize: "0.9rem", color: "var(--text-secondary)" }}>
+                <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "0.88rem", color: "var(--text-secondary)" }}>
                   <span style={{ color: "var(--accent-emerald)", marginTop: "2px" }}>•</span>
                   <span>{s}</span>
                 </li>
               ))
             ) : (
-              <li style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>No specific strengths highlighted.</li>
+              <li style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>No specific strengths highlighted.</li>
             )}
           </ul>
         </div>
 
         {/* Weaknesses / Improvements */}
-        <div className="glass-panel" style={{ padding: "20px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "14px", color: "var(--accent-amber)" }}>
-            <AlertTriangle size={20} />
-            <h3 style={{ fontSize: "1.05rem", color: "var(--text-primary)" }}>Areas to Fix</h3>
+        <div className="glass-panel" style={{ padding: "18px 16px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", color: "var(--accent-amber)" }}>
+            <AlertTriangle size={18} />
+            <h3 style={{ fontSize: "1rem", color: "var(--text-primary)" }}>Areas to Fix</h3>
           </div>
-          <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
+          <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "8px" }}>
             {feedback.weaknesses && feedback.weaknesses.length > 0 ? (
               feedback.weaknesses.map((w, i) => (
-                <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px", fontSize: "0.9rem", color: "var(--text-secondary)" }}>
+                <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "0.88rem", color: "var(--text-secondary)" }}>
                   <span style={{ color: "var(--accent-amber)", marginTop: "2px" }}>•</span>
                   <span>{w}</span>
                 </li>
               ))
             ) : (
-              <li style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>No critical issues found.</li>
+              <li style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>No critical issues found.</li>
             )}
           </ul>
         </div>
@@ -462,14 +466,14 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
         <div
           className="glass-panel"
           style={{
-            padding: "20px",
+            padding: "clamp(16px, 3.5vw, 20px)",
             background: "rgba(99, 102, 241, 0.05)",
             border: "1px solid rgba(99, 102, 241, 0.25)",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", color: "var(--accent-primary)" }}>
-            <Lightbulb size={20} />
-            <h3 style={{ fontSize: "1.05rem", color: "var(--text-primary)" }}>Placement Coach's Actionable Tips</h3>
+            <Lightbulb size={18} />
+            <h3 style={{ fontSize: "1rem", color: "var(--text-primary)" }}>Placement Coach's Actionable Tips</h3>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {feedback.actionable_tips.map((tip, i) => (
@@ -479,7 +483,7 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
                   display: "flex",
                   alignItems: "flex-start",
                   gap: "10px",
-                  fontSize: "0.9rem",
+                  fontSize: "0.88rem",
                   color: "var(--text-secondary)",
                 }}
               >
@@ -495,6 +499,7 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
                     color: "var(--accent-primary)",
                     fontSize: "0.75rem",
                     fontWeight: "700",
+                    flexShrink: 0,
                   }}
                 >
                   {i + 1}
@@ -508,7 +513,7 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
 
       {/* Upgraded Model Answer */}
       {analysis.improved_answer_sample && (
-        <div className="glass-panel" style={{ padding: "20px" }}>
+        <div className="glass-panel" style={{ padding: "clamp(16px, 3.5vw, 20px)" }}>
           <div
             onClick={() => setShowModelAnswer(!showModelAnswer)}
             style={{
@@ -517,26 +522,30 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
               justifyContent: "space-between",
               cursor: "pointer",
               userSelect: "none",
+              flexWrap: "wrap",
+              gap: "8px",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--accent-cyan)" }}>
-              <Sparkles size={20} />
-              <h3 style={{ fontSize: "1.05rem", color: "var(--text-primary)" }}>
+              <Sparkles size={18} />
+              <h3 style={{ fontSize: "1rem", color: "var(--text-primary)" }}>
                 Model Answer: How a Top Candidate Would Phrase This
               </h3>
             </div>
-            {showModelAnswer ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            <div style={{ marginLeft: "auto", color: "var(--text-muted)" }}>
+              {showModelAnswer ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </div>
           </div>
 
           {showModelAnswer && (
             <div
               style={{
-                marginTop: "14px",
-                padding: "16px",
+                marginTop: "12px",
+                padding: "14px 16px",
                 background: "rgba(0, 0, 0, 0.3)",
                 borderLeft: "3px solid var(--accent-cyan)",
                 borderRadius: "var(--radius-sm)",
-                fontSize: "0.95rem",
+                fontSize: "0.92rem",
                 color: "var(--text-primary)",
                 lineHeight: "1.7",
               }}
@@ -549,11 +558,11 @@ export default function ScoreCard({ analysis, onTryAgain, mode = "general" }) {
 
       {/* Action Footer */}
       {onTryAgain && (
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "8px" }}>
           <button
             onClick={onTryAgain}
             className="btn btn-primary"
-            style={{ padding: "14px 36px", fontSize: "1.05rem", gap: "10px" }}
+            style={{ padding: "12px 28px", fontSize: "0.98rem", gap: "8px", width: "100%", maxWidth: "320px" }}
           >
             <RotateCcw size={18} />
             <span>Practice Again & Improve</span>

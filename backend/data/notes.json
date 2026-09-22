@@ -1,0 +1,44 @@
+[
+  {
+    "id": "note_20260922_dsa01",
+    "title": "DSA & Algorithms Core Patterns Cheat Sheet",
+    "file_name": "DSA_Core_Patterns.pdf",
+    "gdrive_url": "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/view?usp=sharing",
+    "file_id": "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs",
+    "preview_url": "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/preview",
+    "view_url": "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/view?usp=sharing",
+    "download_url": "https://drive.google.com/uc?export=download&id=1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs",
+    "category": "DSA & Algorithms",
+    "description": "Essential two pointers, sliding window, binary search, and dynamic programming patterns for coding rounds.",
+    "created_at": "2026-09-22T22:21:40.135413",
+    "updated_at": "2026-09-22T22:21:40.135413"
+  },
+  {
+    "id": "note_20260922_os02",
+    "title": "Operating Systems - Placement Revision Notes",
+    "file_name": "OS_Quick_Revision.pdf",
+    "gdrive_url": "https://drive.google.com/file/d/1-5Wcvy_Vq3pYI2B5bL7n-9f_Zq12mNoP/view?usp=sharing",
+    "file_id": "1-5Wcvy_Vq3pYI2B5bL7n-9f_Zq12mNoP",
+    "preview_url": "https://drive.google.com/file/d/1-5Wcvy_Vq3pYI2B5bL7n-9f_Zq12mNoP/preview",
+    "view_url": "https://drive.google.com/file/d/1-5Wcvy_Vq3pYI2B5bL7n-9f_Zq12mNoP/view?usp=sharing",
+    "download_url": "https://drive.google.com/uc?export=download&id=1-5Wcvy_Vq3pYI2B5bL7n-9f_Zq12mNoP",
+    "category": "Operating Systems",
+    "description": "Virtual memory, CPU scheduling algorithms, semaphores vs mutex, deadlocks, and IPC.",
+    "created_at": "2026-09-22T22:21:40.135413",
+    "updated_at": "2026-09-22T22:21:40.135413"
+  },
+  {
+    "id": "note_20260922_dbms03",
+    "title": "DBMS & SQL Interview Master Notes",
+    "file_name": "DBMS_SQL_Interview_Notes.pdf",
+    "gdrive_url": "https://drive.google.com/file/d/1A2b3C4d5E6f7G8h9I0jK1l2M3n4O5p6Q/view?usp=sharing",
+    "file_id": "1A2b3C4d5E6f7G8h9I0jK1l2M3n4O5p6Q",
+    "preview_url": "https://drive.google.com/file/d/1A2b3C4d5E6f7G8h9I0jK1l2M3n4O5p6Q/preview",
+    "view_url": "https://drive.google.com/file/d/1A2b3C4d5E6f7G8h9I0jK1l2M3n4O5p6Q/view?usp=sharing",
+    "download_url": "https://drive.google.com/uc?export=download&id=1A2b3C4d5E6f7G8h9I0jK1l2M3n4O5p6Q",
+    "category": "Database Management (DBMS)",
+    "description": "ACID properties, indexing strategies (B-Trees), normalization (1NF-BCNF), and SQL query optimization.",
+    "created_at": "2026-09-22T22:21:40.135413",
+    "updated_at": "2026-09-22T22:21:40.135413"
+  }
+]

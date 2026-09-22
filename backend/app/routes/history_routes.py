@@ -32,13 +32,14 @@ async def delete_session(session_id: str):
 
 @router.post("/reset-all")
 async def reset_all_stored_data():
-    """Deletes all session JSON files and parsed resume JSON files from local disk."""
+    """Deletes temporary practice session JSON files and parsed resumes from local disk.
+    NOTE: Stored study notes (backend/data/notes.json) are strictly preserved and NEVER erased."""
     from app.services.resume_service import resume_service
     deleted_sessions = session_store.clear_all_sessions()
     deleted_resumes = resume_service.clear_all_resumes()
     return {
         "success": True,
-        "message": "All stored session and resume JSON files have been removed from disk.",
+        "message": "Temporary session and resume data reset. User notes remain safely preserved.",
         "deleted_sessions_count": deleted_sessions,
         "deleted_resumes_count": deleted_resumes,
     }

@@ -5,6 +5,7 @@ import {
   Briefcase,
   FileCode2,
   TrendingUp,
+  BookOpen,
   Sparkles,
   KeyRound,
   CheckCircle2,
@@ -13,6 +14,7 @@ import {
   Settings,
   Link2,
   X,
+  Menu,
   ExternalLink,
   Server,
   RefreshCw,
@@ -30,6 +32,7 @@ export default function Navbar({
   onRefreshConfig,
 }) {
   const [showModal, setShowModal] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [modalTab, setModalTab] = useState("groq"); // "groq" | "backend"
   const [backendUrlInput, setBackendUrlInput] = useState("");
   const [testState, setTestState] = useState({
@@ -51,6 +54,7 @@ export default function Navbar({
     { id: "gd", label: "GD Practice", icon: Users },
     { id: "hr", label: "HR Interview", icon: Briefcase },
     { id: "resume", label: "Resume Round", icon: FileCode2 },
+    { id: "notes", label: "Notes", icon: BookOpen },
     { id: "analytics", label: "Analytics & History", icon: TrendingUp },
   ];
 
@@ -171,65 +175,73 @@ export default function Navbar({
           position: "sticky",
           top: 0,
           zIndex: 50,
-          background: "rgba(10, 13, 23, 0.85)",
+          background: "rgba(10, 13, 23, 0.88)",
           backdropFilter: "blur(18px)",
+          WebkitBackdropFilter: "blur(18px)",
           borderBottom: "1px solid var(--border-subtle)",
-          padding: "0 24px",
+          padding: "0 16px",
         }}
       >
         <div
           style={{
             maxWidth: "1400px",
             margin: "0 auto",
-            height: "72px",
+            minHeight: "64px",
+            height: "auto",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: "20px",
+            gap: "12px",
+            padding: "8px 0",
           }}
         >
           {/* Logo & Brand */}
           <div
-            onClick={() => onTabChange("dashboard")}
+            onClick={() => {
+              onTabChange("dashboard");
+              setMobileMenuOpen(false);
+            }}
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "12px",
+              gap: "10px",
               cursor: "pointer",
               userSelect: "none",
             }}
           >
             <div
               style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "12px",
+                width: "36px",
+                height: "36px",
+                borderRadius: "10px",
                 background: "var(--gradient-primary)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                boxShadow: "0 0 20px rgba(99, 102, 241, 0.4)",
+                boxShadow: "0 0 16px rgba(99, 102, 241, 0.4)",
+                flexShrink: 0,
               }}
             >
-              <Sparkles size={20} color="#ffffff" />
+              <Sparkles size={18} color="#ffffff" />
             </div>
             <div>
               <div
                 style={{
-                  fontSize: "1.25rem",
+                  fontSize: "1.15rem",
                   fontWeight: "800",
                   fontFamily: "var(--font-heading)",
                   letterSpacing: "-0.02em",
                   background: "linear-gradient(135deg, #ffffff 30%, #a5b4fc 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
+                  lineHeight: "1.2",
                 }}
               >
                 PrepAI
               </div>
               <div
                 style={{
-                  fontSize: "0.68rem",
+                  fontSize: "0.64rem",
                   color: "var(--text-muted)",
                   letterSpacing: "0.08em",
                   fontWeight: "600",
@@ -241,10 +253,10 @@ export default function Navbar({
             </div>
           </div>
 
-          {/* Nav Links */}
+          {/* Desktop Nav Links */}
           <nav
+            className="desktop-only"
             style={{
-              display: "flex",
               alignItems: "center",
               gap: "4px",
               background: "rgba(255, 255, 255, 0.03)",
@@ -284,8 +296,8 @@ export default function Navbar({
             })}
           </nav>
 
-          {/* Right Action Area */}
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          {/* Desktop Right Action Area */}
+          <div className="desktop-only" style={{ alignItems: "center", gap: "10px" }}>
             {onResetStorage && (
               <button
                 onClick={onResetStorage}
@@ -296,6 +308,7 @@ export default function Navbar({
                   gap: "6px",
                   borderRadius: "var(--radius-full)",
                   color: "var(--text-muted)",
+                  minHeight: "unset",
                 }}
                 title="Clear all stored session and resume JSON files to manage local disk space"
               >
@@ -354,7 +367,143 @@ export default function Navbar({
               </button>
             )}
           </div>
+
+          {/* Mobile Right Controls: Status Pill + Hamburger Toggle */}
+          <div className="mobile-only" style={{ alignItems: "center", gap: "8px" }}>
+            <button
+              onClick={() => setShowModal(true)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "5px",
+                padding: "6px 10px",
+                background: isConfigured ? "rgba(16, 185, 129, 0.12)" : "rgba(245, 158, 11, 0.15)",
+                border: isConfigured ? "1px solid rgba(16, 185, 129, 0.3)" : "1px solid rgba(245, 158, 11, 0.3)",
+                borderRadius: "var(--radius-full)",
+                fontSize: "0.75rem",
+                fontWeight: "600",
+                color: isConfigured ? "#6ee7b7" : "#fcd34d",
+                cursor: "pointer",
+              }}
+              title="Configure Groq API or Backend"
+            >
+              {isConfigured ? <CheckCircle2 size={13} color="#10b981" /> : <AlertCircle size={13} color="#f59e0b" />}
+              <span>{isConfigured ? "Live" : "Setup"}</span>
+            </button>
+
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              style={{
+                padding: "8px",
+                background: "rgba(255, 255, 255, 0.06)",
+                border: "1px solid var(--border-subtle)",
+                borderRadius: "10px",
+                color: "var(--text-primary)",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minWidth: "40px",
+                minHeight: "40px",
+              }}
+              aria-label="Toggle navigation menu"
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Slide-down / Full Overlay Drawer */}
+        {mobileMenuOpen && (
+          <div
+            style={{
+              position: "fixed",
+              top: "64px",
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 49,
+              background: "rgba(10, 13, 23, 0.98)",
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+              padding: "20px 16px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              overflowY: "auto",
+              borderTop: "1px solid var(--border-subtle)",
+            }}
+          >
+            <div style={{ fontSize: "0.75rem", fontWeight: "700", textTransform: "uppercase", color: "var(--text-muted)", letterSpacing: "0.08em" }}>
+              Practice Rounds
+            </div>
+
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    onTabChange(item.id);
+                    setMobileMenuOpen(false);
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    padding: "13px 16px",
+                    borderRadius: "var(--radius-md)",
+                    fontSize: "0.98rem",
+                    fontWeight: isActive ? "700" : "500",
+                    color: isActive ? "#ffffff" : "var(--text-primary)",
+                    background: isActive ? "var(--gradient-primary)" : "rgba(255, 255, 255, 0.04)",
+                    border: isActive ? "none" : "1px solid var(--border-subtle)",
+                    boxShadow: isActive ? "0 4px 14px rgba(99, 102, 241, 0.35)" : "none",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    width: "100%",
+                  }}
+                >
+                  <Icon size={19} color={isActive ? "#ffffff" : "var(--accent-primary)"} />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+
+            <div style={{ height: "1px", background: "var(--border-subtle)", margin: "8px 0" }} />
+
+            <div style={{ fontSize: "0.75rem", fontWeight: "700", textTransform: "uppercase", color: "var(--text-muted)", letterSpacing: "0.08em" }}>
+              Controls & Settings
+            </div>
+
+            <button
+              onClick={() => {
+                setShowModal(true);
+                setMobileMenuOpen(false);
+              }}
+              className="btn btn-secondary"
+              style={{ width: "100%", justifyContent: "flex-start", padding: "12px 16px", gap: "10px" }}
+            >
+              <Settings size={18} color="var(--accent-cyan)" />
+              <span>Groq Key & Backend URL</span>
+            </button>
+
+            {onResetStorage && (
+              <button
+                onClick={() => {
+                  onResetStorage();
+                  setMobileMenuOpen(false);
+                }}
+                className="btn btn-secondary"
+                style={{ width: "100%", justifyContent: "flex-start", padding: "12px 16px", gap: "10px", color: "var(--accent-rose)" }}
+              >
+                <Trash2 size={18} />
+                <span>Clear Stored Practice History</span>
+              </button>
+            )}
+          </div>
+        )}
       </header>
 
       {/* Backend & API Settings Modal */}
@@ -364,12 +513,13 @@ export default function Navbar({
             position: "fixed",
             inset: 0,
             zIndex: 1000,
-            background: "rgba(0, 0, 0, 0.75)",
-            backdropFilter: "blur(6px)",
+            background: "rgba(0, 0, 0, 0.78)",
+            backdropFilter: "blur(8px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "20px",
+            padding: "16px",
+            overflowY: "auto",
           }}
           onClick={() => setShowModal(false)}
         >
@@ -378,11 +528,14 @@ export default function Navbar({
               background: "var(--bg-card)",
               border: "1px solid var(--border-medium)",
               borderRadius: "16px",
-              padding: "28px",
+              padding: "20px 18px",
               maxWidth: "560px",
               width: "100%",
               boxShadow: "0 20px 50px rgba(0, 0, 0, 0.6)",
               color: "var(--text-primary)",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              boxSizing: "border-box",
             }}
             onClick={(e) => e.stopPropagation()}
           >
