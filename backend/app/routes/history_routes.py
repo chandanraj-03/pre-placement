@@ -62,3 +62,48 @@ async def get_config_status():
         "masked_key": masked_key,
         "active_model": get_llm_model(),
     }
+
+from pydantic import BaseModel
+
+class SetGroqKeyPayload(BaseModel):
+    groq_api_key: str
+
+@router.post("/set-groq-key")
+async def set_groq_key_endpoint(payload: SetGroqKeyPayload):
+    """Configures and tests a new Groq API key dynamically without restarting the server."""
+    key = payload.groq_api_key.strip()
+    if not key or not key.startswith("gsk_"):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid Groq API key format. A valid Groq key starts with 'gsk_'"
+        )
+
+    # Test key validity with a lightweight call to Groq API
+    from groq import Groq
+    try:
+        test_client = Groq(api_key=key)
+        test_client.models.list()
+    except Exception as e:
+        logger.warning(f"Groq API key test failed: {e}")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Groq rejected this API key: {str(e)}"
+        )
+
+    from app.config import set_groq_api_key
+    set_groq_api_key(key)
+    llm_service._cached_key = None
+    llm_service._client = None
+    from app.services.stt_service import stt_service
+    stt_service._cached_key = None
+    stt_service._client = None
+
+    masked = key[:4] + "..." + key[-4:] if len(key) > 8 else "***"
+    return {
+        "success": True,
+        "message": "Groq API key verified and saved successfully!",
+        "masked_key": masked,
+        "is_configured": True,
+        "active_model": get_llm_model(),
+    }
+

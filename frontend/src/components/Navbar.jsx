@@ -16,6 +16,9 @@ import {
   ExternalLink,
   Server,
   RefreshCw,
+  Eye,
+  EyeOff,
+  Check,
 } from "lucide-react";
 import { api, getApiBaseUrl, setCustomBackendUrl } from "../api/client";
 
@@ -27,8 +30,17 @@ export default function Navbar({
   onRefreshConfig,
 }) {
   const [showModal, setShowModal] = useState(false);
+  const [modalTab, setModalTab] = useState("groq"); // "groq" | "backend"
   const [backendUrlInput, setBackendUrlInput] = useState("");
   const [testState, setTestState] = useState({
+    loading: false,
+    success: null,
+    message: "",
+  });
+
+  const [groqKeyInput, setGroqKeyInput] = useState("");
+  const [showKeyText, setShowKeyText] = useState(false);
+  const [keyState, setKeyState] = useState({
     loading: false,
     success: null,
     message: "",
@@ -44,14 +56,67 @@ export default function Navbar({
 
   const isConfigured = configStatus?.is_configured;
   const activeModel = configStatus?.active_model || "openai/gpt-oss-120b";
+  const maskedKey = configStatus?.masked_key || "";
   const currentBaseUrl = getApiBaseUrl();
 
   useEffect(() => {
     if (showModal) {
       setBackendUrlInput(getApiBaseUrl());
       setTestState({ loading: false, success: null, message: "" });
+      setGroqKeyInput("");
+      setKeyState({ loading: false, success: null, message: "" });
+      setModalTab(isConfigured ? "groq" : "groq");
     }
-  }, [showModal]);
+  }, [showModal, isConfigured]);
+
+  const handleSaveGroqKey = async (e) => {
+    if (e) e.preventDefault();
+    const cleanKey = groqKeyInput.trim();
+    if (!cleanKey) {
+      setKeyState({ loading: false, success: false, message: "Please enter your Groq API key." });
+      return;
+    }
+
+    if (!cleanKey.startsWith("gsk_")) {
+      setKeyState({
+        loading: false,
+        success: false,
+        message: "Invalid key format. Groq API keys start with 'gsk_'.",
+      });
+      return;
+    }
+
+    setKeyState({
+      loading: true,
+      success: null,
+      message: "Validating API key with Groq servers...",
+    });
+
+    try {
+      const res = await api.setGroqApiKey(cleanKey);
+      if (res && res.success) {
+        setKeyState({
+          loading: false,
+          success: true,
+          message: res.message || "Groq API key verified and activated successfully!",
+        });
+        setGroqKeyInput("");
+        if (onRefreshConfig) onRefreshConfig();
+      } else {
+        setKeyState({
+          loading: false,
+          success: false,
+          message: "Failed to save Groq API key.",
+        });
+      }
+    } catch (err) {
+      setKeyState({
+        loading: false,
+        success: false,
+        message: `Validation failed: ${err.message}`,
+      });
+    }
+  };
 
   const handleTestAndSave = async (e) => {
     if (e) e.preventDefault();
@@ -327,7 +392,7 @@ export default function Navbar({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                marginBottom: "20px",
+                marginBottom: "16px",
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -339,14 +404,14 @@ export default function Navbar({
                     color: "var(--primary-light)",
                   }}
                 >
-                  <Server size={20} />
+                  <Settings size={20} />
                 </div>
                 <div>
                   <h3 style={{ margin: 0, fontSize: "1.15rem", fontWeight: "700" }}>
-                    Backend Connection Settings
+                    System & API Configuration
                   </h3>
                   <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                    Connect to your FastAPI server on Render or localhost
+                    Configure Groq AI key and backend server connection
                   </div>
                 </div>
               </div>
@@ -364,147 +429,422 @@ export default function Navbar({
               </button>
             </div>
 
-            {/* Current Target URL Indicator */}
+            {/* Navigation Tabs */}
             <div
               style={{
-                background: "rgba(255, 255, 255, 0.03)",
-                border: "1px solid var(--border-subtle)",
-                borderRadius: "10px",
-                padding: "12px 14px",
+                display: "flex",
+                gap: "8px",
                 marginBottom: "20px",
-                fontSize: "0.82rem",
+                borderBottom: "1px solid var(--border-subtle)",
+                paddingBottom: "10px",
               }}
             >
-              <div style={{ color: "var(--text-muted)", marginBottom: "4px" }}>
-                Active Target Backend:
-              </div>
-              <div
+              <button
+                type="button"
+                onClick={() => setModalTab("groq")}
                 style={{
-                  fontFamily: "monospace",
-                  color: isConfigured ? "#34d399" : "#fbbf24",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "8px 14px",
+                  borderRadius: "8px",
+                  background: modalTab === "groq" ? "rgba(99, 102, 241, 0.15)" : "transparent",
+                  color: modalTab === "groq" ? "#a5b4fc" : "var(--text-secondary)",
+                  border: modalTab === "groq" ? "1px solid rgba(99, 102, 241, 0.35)" : "1px solid transparent",
+                  cursor: "pointer",
                   fontWeight: "600",
-                  wordBreak: "break-all",
+                  fontSize: "0.84rem",
+                  transition: "all 0.15s ease",
                 }}
               >
-                {currentBaseUrl}
-              </div>
-              <div style={{ marginTop: "6px", fontSize: "0.75rem", color: isConfigured ? "#34d399" : "#f87171" }}>
-                {isConfigured
-                  ? "● Connected & Groq API key is configured"
-                  : "○ Not responding or missing GROQ_API_KEY on the backend"}
-              </div>
+                <KeyRound size={15} />
+                <span>Groq API Key</span>
+                {isConfigured ? (
+                  <span
+                    style={{
+                      fontSize: "0.68rem",
+                      background: "rgba(16, 185, 129, 0.2)",
+                      color: "#34d399",
+                      padding: "2px 7px",
+                      borderRadius: "10px",
+                      fontWeight: "700",
+                    }}
+                  >
+                    Active
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      fontSize: "0.68rem",
+                      background: "rgba(245, 158, 11, 0.2)",
+                      color: "#fbbf24",
+                      padding: "2px 7px",
+                      borderRadius: "10px",
+                      fontWeight: "700",
+                    }}
+                  >
+                    Required
+                  </span>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setModalTab("backend")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "8px 14px",
+                  borderRadius: "8px",
+                  background: modalTab === "backend" ? "rgba(99, 102, 241, 0.15)" : "transparent",
+                  color: modalTab === "backend" ? "#a5b4fc" : "var(--text-secondary)",
+                  border: modalTab === "backend" ? "1px solid rgba(99, 102, 241, 0.35)" : "1px solid transparent",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                  fontSize: "0.84rem",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                <Server size={15} />
+                <span>Backend URL</span>
+              </button>
             </div>
 
-            {/* Backend URL Input Form */}
-            <form onSubmit={handleTestAndSave} style={{ marginBottom: "20px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "0.85rem",
-                  fontWeight: "600",
-                  marginBottom: "8px",
-                }}
-              >
-                Render Backend URL
-              </label>
-              <div style={{ display: "flex", gap: "8px" }}>
-                <input
-                  type="text"
-                  value={backendUrlInput}
-                  onChange={(e) => setBackendUrlInput(e.target.value)}
-                  placeholder="https://prepai-backend-xxxx.onrender.com"
+            {/* TAB 1: GROQ API KEY CONFIGURATION */}
+            {modalTab === "groq" && (
+              <div>
+                {/* Active Key Status Card */}
+                <div
                   style={{
-                    flex: 1,
-                    padding: "10px 14px",
+                    background: isConfigured ? "rgba(16, 185, 129, 0.08)" : "rgba(245, 158, 11, 0.08)",
+                    border: isConfigured ? "1px solid rgba(16, 185, 129, 0.25)" : "1px solid rgba(245, 158, 11, 0.3)",
                     borderRadius: "10px",
-                    background: "rgba(15, 23, 42, 0.8)",
-                    border: "1px solid var(--border-medium)",
-                    color: "#ffffff",
-                    fontSize: "0.88rem",
-                    outline: "none",
+                    padding: "12px 14px",
+                    marginBottom: "18px",
                   }}
-                />
-                <button
-                  type="submit"
-                  disabled={testState.loading}
-                  className="btn btn-primary"
-                  style={{ padding: "10px 18px", fontSize: "0.85rem", gap: "6px" }}
                 >
-                  {testState.loading ? (
-                    <>
-                      <RefreshCw size={14} className="spin" />
-                      <span>Testing...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Link2 size={14} />
-                      <span>Connect</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      {isConfigured ? (
+                        <CheckCircle2 size={16} color="#10b981" />
+                      ) : (
+                        <AlertCircle size={16} color="#f59e0b" />
+                      )}
+                      <span
+                        style={{
+                          fontWeight: "600",
+                          color: isConfigured ? "#6ee7b7" : "#fcd34d",
+                          fontSize: "0.85rem",
+                        }}
+                      >
+                        {isConfigured ? "Groq API Key Configured & Active" : "No Groq API Key Configured"}
+                      </span>
+                    </div>
+                    {isConfigured && maskedKey && (
+                      <span
+                        style={{
+                          fontFamily: "monospace",
+                          fontSize: "0.78rem",
+                          color: "#6ee7b7",
+                          background: "rgba(0, 0, 0, 0.35)",
+                          padding: "3px 8px",
+                          borderRadius: "6px",
+                          border: "1px solid rgba(16, 185, 129, 0.2)",
+                        }}
+                      >
+                        {maskedKey}
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ fontSize: "0.76rem", color: "var(--text-muted)", marginTop: "6px" }}>
+                    {isConfigured ? (
+                      <>Active LLM Model: <code style={{ color: "#c7d2fe" }}>{activeModel}</code> | Speech: <code style={{ color: "#c7d2fe" }}>Whisper Large v3</code></>
+                    ) : (
+                      "Provide your key to enable AI Group Discussion topics, interview scoring, and Whisper speech transcription."
+                    )}
+                  </div>
+                </div>
 
-            {/* Status Feedback Banner */}
-            {testState.message && (
-              <div
-                style={{
-                  padding: "12px 14px",
-                  borderRadius: "10px",
-                  marginBottom: "20px",
-                  fontSize: "0.82rem",
-                  lineHeight: "1.4",
-                  background:
-                    testState.success === true
-                      ? "rgba(16, 185, 129, 0.12)"
-                      : "rgba(239, 68, 68, 0.12)",
-                  border:
-                    testState.success === true
-                      ? "1px solid rgba(16, 185, 129, 0.3)"
-                      : "1px solid rgba(239, 68, 68, 0.3)",
-                  color: testState.success === true ? "#6ee7b7" : "#fca5a5",
-                }}
-              >
-                {testState.message}
+                {/* Groq Key Input Form */}
+                <form onSubmit={handleSaveGroqKey} style={{ marginBottom: "18px" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "0.85rem",
+                      fontWeight: "600",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    {isConfigured ? "Update Groq API Key" : "Enter Groq API Key"}
+                  </label>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <div style={{ flex: 1, position: "relative" }}>
+                      <input
+                        type={showKeyText ? "text" : "password"}
+                        value={groqKeyInput}
+                        onChange={(e) => setGroqKeyInput(e.target.value)}
+                        placeholder="gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                        autoComplete="off"
+                        spellCheck="false"
+                        style={{
+                          width: "100%",
+                          padding: "10px 42px 10px 14px",
+                          borderRadius: "10px",
+                          background: "rgba(15, 23, 42, 0.8)",
+                          border: "1px solid var(--border-medium)",
+                          color: "#ffffff",
+                          fontSize: "0.88rem",
+                          fontFamily: showKeyText ? "monospace" : "inherit",
+                          outline: "none",
+                          boxSizing: "border-box",
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowKeyText(!showKeyText)}
+                        style={{
+                          position: "absolute",
+                          right: "10px",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          background: "transparent",
+                          border: "none",
+                          color: "var(--text-muted)",
+                          cursor: "pointer",
+                          padding: "4px",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                        title={showKeyText ? "Hide API key" : "Show API key"}
+                      >
+                        {showKeyText ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={keyState.loading || !groqKeyInput.trim()}
+                      className="btn btn-primary"
+                      style={{ padding: "10px 18px", fontSize: "0.85rem", gap: "6px", whiteSpace: "nowrap" }}
+                    >
+                      {keyState.loading ? (
+                        <>
+                          <RefreshCw size={14} className="spin" />
+                          <span>Verifying...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Check size={14} />
+                          <span>Save & Test</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+
+                {/* Key Status Feedback Banner */}
+                {keyState.message && (
+                  <div
+                    style={{
+                      padding: "12px 14px",
+                      borderRadius: "10px",
+                      marginBottom: "18px",
+                      fontSize: "0.82rem",
+                      lineHeight: "1.4",
+                      background:
+                        keyState.success === true
+                          ? "rgba(16, 185, 129, 0.12)"
+                          : "rgba(239, 68, 68, 0.12)",
+                      border:
+                        keyState.success === true
+                          ? "1px solid rgba(16, 185, 129, 0.3)"
+                          : "1px solid rgba(239, 68, 68, 0.3)",
+                      color: keyState.success === true ? "#6ee7b7" : "#fca5a5",
+                    }}
+                  >
+                    {keyState.message}
+                  </div>
+                )}
+
+                {/* Groq Key Instructions */}
+                <div
+                  style={{
+                    background: "rgba(99, 102, 241, 0.05)",
+                    border: "1px solid rgba(99, 102, 241, 0.2)",
+                    borderRadius: "10px",
+                    padding: "14px",
+                    fontSize: "0.8rem",
+                    lineHeight: "1.5",
+                    color: "var(--text-secondary)",
+                  }}
+                >
+                  <div style={{ fontWeight: "700", color: "#c7d2fe", marginBottom: "6px" }}>
+                    How to obtain a free Groq API Key:
+                  </div>
+                  <ol style={{ margin: 0, paddingLeft: "18px" }}>
+                    <li>
+                      Visit{" "}
+                      <a
+                        href="https://console.groq.com/keys"
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{
+                          color: "var(--accent-primary)",
+                          textDecoration: "underline",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "3px",
+                        }}
+                      >
+                        console.groq.com/keys <ExternalLink size={11} />
+                      </a>{" "}
+                      and sign in (free tier, no credit card required).
+                    </li>
+                    <li>Click <strong>Create API Key</strong> and copy the key (starts with <code>gsk_</code>).</li>
+                    <li>Paste it above and click <strong>Save & Test</strong>. The key is verified live with Groq and activated immediately.</li>
+                  </ol>
+                </div>
               </div>
             )}
 
-            {/* Step-by-Step Instructions */}
-            <div
-              style={{
-                background: "rgba(99, 102, 241, 0.05)",
-                border: "1px solid rgba(99, 102, 241, 0.2)",
-                borderRadius: "10px",
-                padding: "14px",
-                fontSize: "0.8rem",
-                lineHeight: "1.5",
-                color: "var(--text-secondary)",
-              }}
-            >
-              <div style={{ fontWeight: "700", color: "#c7d2fe", marginBottom: "6px" }}>
-                How to find your Render backend URL:
+            {/* TAB 2: BACKEND URL CONFIGURATION */}
+            {modalTab === "backend" && (
+              <div>
+                {/* Current Target URL Indicator */}
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.03)",
+                    border: "1px solid var(--border-subtle)",
+                    borderRadius: "10px",
+                    padding: "12px 14px",
+                    marginBottom: "18px",
+                    fontSize: "0.82rem",
+                  }}
+                >
+                  <div style={{ color: "var(--text-muted)", marginBottom: "4px" }}>
+                    Active Target Backend:
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "monospace",
+                      color: isConfigured ? "#34d399" : "#fbbf24",
+                      fontWeight: "600",
+                      wordBreak: "break-all",
+                    }}
+                  >
+                    {currentBaseUrl}
+                  </div>
+                  <div style={{ marginTop: "6px", fontSize: "0.75rem", color: isConfigured ? "#34d399" : "#f87171" }}>
+                    {isConfigured
+                      ? "● Connected & Groq API key is configured"
+                      : "○ Connected, but Groq API key is not configured"}
+                  </div>
+                </div>
+
+                {/* Backend URL Input Form */}
+                <form onSubmit={handleTestAndSave} style={{ marginBottom: "18px" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "0.85rem",
+                      fontWeight: "600",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Render Backend URL
+                  </label>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <input
+                      type="text"
+                      value={backendUrlInput}
+                      onChange={(e) => setBackendUrlInput(e.target.value)}
+                      placeholder="https://prepai-backend-xxxx.onrender.com"
+                      style={{
+                        flex: 1,
+                        padding: "10px 14px",
+                        borderRadius: "10px",
+                        background: "rgba(15, 23, 42, 0.8)",
+                        border: "1px solid var(--border-medium)",
+                        color: "#ffffff",
+                        fontSize: "0.88rem",
+                        outline: "none",
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={testState.loading}
+                      className="btn btn-primary"
+                      style={{ padding: "10px 18px", fontSize: "0.85rem", gap: "6px" }}
+                    >
+                      {testState.loading ? (
+                        <>
+                          <RefreshCw size={14} className="spin" />
+                          <span>Testing...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Link2 size={14} />
+                          <span>Connect</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+
+                {/* Status Feedback Banner */}
+                {testState.message && (
+                  <div
+                    style={{
+                      padding: "12px 14px",
+                      borderRadius: "10px",
+                      marginBottom: "18px",
+                      fontSize: "0.82rem",
+                      lineHeight: "1.4",
+                      background:
+                        testState.success === true
+                          ? "rgba(16, 185, 129, 0.12)"
+                          : "rgba(239, 68, 68, 0.12)",
+                      border:
+                        testState.success === true
+                          ? "1px solid rgba(16, 185, 129, 0.3)"
+                          : "1px solid rgba(239, 68, 68, 0.3)",
+                      color: testState.success === true ? "#6ee7b7" : "#fca5a5",
+                    }}
+                  >
+                    {testState.message}
+                  </div>
+                )}
+
+                {/* Step-by-Step Instructions */}
+                <div
+                  style={{
+                    background: "rgba(99, 102, 241, 0.05)",
+                    border: "1px solid rgba(99, 102, 241, 0.2)",
+                    borderRadius: "10px",
+                    padding: "14px",
+                    fontSize: "0.8rem",
+                    lineHeight: "1.5",
+                    color: "var(--text-secondary)",
+                  }}
+                >
+                  <div style={{ fontWeight: "700", color: "#c7d2fe", marginBottom: "6px" }}>
+                    How to find your Render backend URL:
+                  </div>
+                  <ol style={{ margin: 0, paddingLeft: "18px" }}>
+                    <li>Open your <strong>Render Dashboard</strong> (dashboard.render.com).</li>
+                    <li>Click on <strong>prepai-backend</strong>.</li>
+                    <li>
+                      Copy the URL under the title (e.g.{" "}
+                      <code style={{ background: "rgba(0,0,0,0.3)", padding: "1px 4px", borderRadius: "4px" }}>
+                        https://prepai-backend-xxxx.onrender.com
+                      </code>
+                      ).
+                    </li>
+                    <li>Paste it above and click <strong>Connect</strong>!</li>
+                  </ol>
+                </div>
               </div>
-              <ol style={{ margin: 0, paddingLeft: "18px" }}>
-                <li>
-                  Open your <strong>Render Dashboard</strong> (dashboard.render.com).
-                </li>
-                <li>
-                  Click on <strong>prepai-backend</strong>.
-                </li>
-                <li>
-                  Copy the URL right under the title (e.g.{" "}
-                  <code style={{ background: "rgba(0,0,0,0.3)", padding: "1px 4px", borderRadius: "4px" }}>
-                    https://prepai-backend-xxxx.onrender.com
-                  </code>
-                  ).
-                </li>
-                <li>
-                  Ensure <strong>GROQ_API_KEY</strong> is set under the <strong>Environment</strong> tab of{" "}
-                  <code>prepai-backend</code>.
-                </li>
-                <li>Paste it above and click <strong>Connect</strong>!</li>
-              </ol>
-            </div>
+            )}
 
             {/* Modal Actions */}
             <div

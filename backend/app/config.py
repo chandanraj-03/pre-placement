@@ -22,6 +22,29 @@ def get_env_var(key: str, default: str = "") -> str:
 def get_groq_api_key() -> str:
     return get_env_var("GROQ_API_KEY", "")
 
+def set_groq_api_key(new_key: str):
+    """Sets the active Groq key in environment and persists to .env if writable."""
+    clean_key = new_key.strip()
+    os.environ["GROQ_API_KEY"] = clean_key
+    try:
+        if ENV_PATH.exists():
+            content = ENV_PATH.read_text(encoding="utf-8")
+            if "GROQ_API_KEY=" in content:
+                lines = content.splitlines()
+                new_lines = []
+                for line in lines:
+                    if line.strip().startswith("GROQ_API_KEY="):
+                        new_lines.append(f"GROQ_API_KEY={clean_key}")
+                    else:
+                        new_lines.append(line)
+                ENV_PATH.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+            else:
+                ENV_PATH.write_text(content + f"\nGROQ_API_KEY={clean_key}\n", encoding="utf-8")
+        else:
+            ENV_PATH.write_text(f"GROQ_API_KEY={clean_key}\n", encoding="utf-8")
+    except Exception:
+        pass
+
 def get_llm_model() -> str:
     return get_env_var("LLM_MODEL", "openai/gpt-oss-120b")
 

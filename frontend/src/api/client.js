@@ -47,6 +47,14 @@ export const api = {
     return res.json();
   },
 
+  async setGroqApiKey(apiKey) {
+    return request("/api/history/set-groq-key", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ groq_api_key: apiKey }),
+    });
+  },
+
   // Direct STT Transcription
   async transcribeAudio(audioBlob) {
     const formData = new FormData();

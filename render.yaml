@@ -41,4 +41,5 @@ services:
       - key: NODE_VERSION
         value: 20.18.0
       - key: VITE_API_BASE_URL
-        value: https://prepai-backend.onrender.com
+        value: https://prepai-backend-kx50.onrender.com
+
